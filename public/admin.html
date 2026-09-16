@@ -32,6 +32,7 @@
     .dash-tab { white-space: nowrap; }
   }
 </style>
+<link rel="stylesheet" href="css/reference-redesign.css">
 </head>
 <body>
 
@@ -176,7 +177,7 @@ async function renderAdminDashboard() {
   document.getElementById('adminPendingTable').innerHTML =
     '<tr><th>Photo</th><th>Property</th><th>Owner</th><th>Price</th><th>Actions</th></tr>' +
     (pending.map(function(p){
-      return '<tr><td><img src="/assets/placeholder.svg" alt="placeholder"/></td><td>' + p.title + '<br><span style="color:var(--ink-3);font-size:0.78rem;">' + p.location + '</span></td>' +
+      return '<tr><td><img src="/assets/luxury-villa.png" alt="Property thumbnail"/></td><td>' + p.title + '<br><span style="color:var(--ink-3);font-size:0.78rem;">' + p.location + '</span></td>' +
         '<td>' + ownerName(p) + '</td><td>' + p.priceStr + '</td>' +
         '<td><button class="dash-btn dash-btn-approve" onclick="adminApprove(' + p.id + ')">Approve</button>' +
         '<button class="dash-btn dash-btn-reject" onclick="adminReject(' + p.id + ')">Reject</button>' +
@@ -187,7 +188,7 @@ async function renderAdminDashboard() {
   document.getElementById('adminFlaggedTable').innerHTML =
     '<tr><th>Photo</th><th>Property</th><th>Owner</th><th>Price</th><th>Actions</th></tr>' +
     (flagged.map(function(p){
-      return '<tr><td><img src="/assets/placeholder.svg" alt="placeholder"/></td><td>' + p.title + '<br><span style="color:var(--ink-3);font-size:0.78rem;">' + p.location + '</span></td>' +
+      return '<tr><td><img src="/assets/luxury-villa.png" alt="Property thumbnail"/></td><td>' + p.title + '<br><span style="color:var(--ink-3);font-size:0.78rem;">' + p.location + '</span></td>' +
         '<td>' + ownerName(p) + '</td><td>' + p.priceStr + '</td>' +
         '<td><button class="dash-btn dash-btn-reject" onclick="adminRemove(' + p.id + ')">Remove (Scam)</button>' +
         '<button class="dash-btn dash-btn-approve" onclick="adminApprove(' + p.id + ')">Restore / Approve</button>' +
@@ -240,7 +241,7 @@ async function renderAdminDashboard() {
   document.getElementById('adminAllTable').innerHTML =
     '<tr><th>Photo</th><th>Property</th><th>Owner</th><th>Price</th><th>Status</th><th>Actions</th></tr>' +
     properties.map(function(p){
-      return '<tr><td><img src="/assets/placeholder.svg" alt="placeholder"/></td><td>' + p.title + (p.verifiedProperty ? ' <span class="trust-badge verified-property" style="font-size:0.58rem;">Verified</span>' : '') + '</td><td>' + ownerName(p) + '</td><td>' + p.priceStr + '</td>' +
+      return '<tr><td><img src="/assets/luxury-villa.png" alt="Property thumbnail"/></td><td>' + p.title + (p.verifiedProperty ? ' <span class="trust-badge verified-property" style="font-size:0.58rem;">Verified</span>' : '') + '</td><td>' + ownerName(p) + '</td><td>' + p.priceStr + '</td>' +
         '<td><span class="status-badge status-' + p.status + '">' + p.status + '</span></td>' +
         '<td><button class="dash-btn dash-btn-ghost" onclick="previewProperty(' + p.id + ')">Preview</button>' +
         verifyPropBtn(p) +

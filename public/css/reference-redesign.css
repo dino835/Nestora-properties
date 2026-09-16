@@ -1,220 +1,397 @@
-/* Screenshot-led premium redesign: editorial spacing, glass surfaces, bright green accents. */
+/* Nestora 2026 — image-led, editorial real-estate interface */
 :root {
-  --ink: #090b0a;
-  --ink-2: #3f4541;
-  --ink-3: #737a75;
-  --ink-4: #abb0ac;
-  --paper: #f7faf8;
-  --white: #ffffff;
-  --sage: #28b463;
-  --sage-mid: #20a658;
-  --sage-light: #e7f8ee;
-  --gold: #28b463;
-  --gold-light: #e7f8ee;
-  --border: rgba(17, 45, 30, .11);
-  --border-dark: rgba(17, 45, 30, .22);
+  --ink: #0b110d;
+  --ink-2: #3f4a43;
+  --ink-3: #718078;
+  --ink-4: #a9b3ad;
+  --paper: #f3f7f4;
+  --white: #fff;
+  --sage: #27b768;
+  --sage-mid: #159b50;
+  --sage-light: #e5f8ec;
+  --gold: #27b768;
+  --gold-light: #e5f8ec;
+  --border: rgba(15, 46, 28, .11);
+  --border-dark: rgba(15, 46, 28, .22);
   --radius: 18px;
-  --radius-lg: 30px;
-  --shadow-sm: 0 6px 24px rgba(21, 59, 38, .06);
-  --shadow: 0 18px 50px rgba(21, 59, 38, .10);
-  --shadow-lg: 0 34px 90px rgba(10, 34, 21, .14);
-  --font-head: 'Syne', sans-serif;
-  --font-body: 'Epilogue', sans-serif;
-  --nav-h: 78px;
-  --transition: .45s cubic-bezier(.2,.75,.2,1);
+  --radius-lg: 32px;
+  --shadow-sm: 0 8px 28px rgba(13, 46, 26, .07);
+  --shadow: 0 22px 60px rgba(13, 46, 26, .12);
+  --shadow-lg: 0 38px 100px rgba(5, 24, 13, .2);
+  --nav-h: 72px;
+  --transition: .4s cubic-bezier(.2,.8,.2,1);
 }
 
-body {
-  background:
-    radial-gradient(circle at 12% 18%, rgba(52, 211, 112, .07), transparent 28rem),
-    var(--paper);
-}
+body { background: var(--paper); }
+::selection { background: #45d482; color: #07120b; }
 
-nav {
+/* Floating navigation */
+nav:not(.admin-topbar) {
   position: fixed;
-  width: calc(100% - 32px);
-  top: 16px;
-  left: 16px;
-  height: var(--nav-h);
-  padding: 0 28px;
-  border: 1px solid rgba(255,255,255,.16);
-  border-radius: 24px;
-  background: rgba(8, 10, 9, .78);
-  box-shadow: 0 16px 50px rgba(0,0,0,.20);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
-}
-.logo { color: #fff; text-transform: uppercase; letter-spacing: -.04em; }
-.logo em { color: #52df87; }
-.nav-left a, .nav-right a { color: rgba(255,255,255,.72); letter-spacing: .04em; }
-.nav-left a:hover, .nav-right a:hover { color: #fff; background: rgba(255,255,255,.09); }
-.nav-left a.active { color: #67e596; background: rgba(40,180,99,.14); }
-.nav-btn { background: #fff !important; color: #111 !important; border-radius: 14px !important; }
-.hamburger span { background: #fff; }
-
-.hero {
-  min-height: 100svh;
-  padding: 180px 24px 72px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: #050706;
-}
-.hero::before {
-  background:
-    radial-gradient(circle at 25% 36%, rgba(40,180,99,.26), transparent 35%),
-    radial-gradient(circle at 78% 72%, rgba(83,229,139,.11), transparent 30%),
-    linear-gradient(120deg, transparent 10%, rgba(255,255,255,.035), transparent 48%);
-}
-.hero::after {
-  content: 'NESTORA — PROPERTY DISCOVERY ACROSS NIGERIA';
-  position: absolute;
-  bottom: 30px;
+  top: 18px;
   left: 50%;
   transform: translateX(-50%);
-  color: rgba(255,255,255,.52);
-  font-size: .66rem;
-  letter-spacing: .16em;
-  white-space: nowrap;
+  width: min(1180px, calc(100% - 36px));
+  height: var(--nav-h);
+  padding: 0 20px;
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 22px;
+  background: rgba(9, 15, 11, .72);
+  box-shadow: 0 18px 60px rgba(0,0,0,.22);
+  backdrop-filter: blur(24px) saturate(145%);
+  -webkit-backdrop-filter: blur(24px) saturate(145%);
 }
-.hero-badge { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.14); color: #75e8a0; }
-.hero h1 {
-  max-width: 900px;
-  font-size: clamp(3rem, 7.7vw, 7.2rem);
-  font-weight: 500;
-  line-height: .94;
-  letter-spacing: -.075em;
-  margin-bottom: 26px;
-}
-.hero h1 em { color: #50da82; -webkit-text-stroke: 0; }
-.hero-sub { max-width: 590px; color: rgba(255,255,255,.62); font-size: clamp(.95rem,1.5vw,1.15rem); line-height: 1.8; }
-.search-box {
-  max-width: 860px;
-  width: 100%;
-  margin-bottom: 52px;
-  padding: 9px 9px 9px 20px;
-  border: 1px solid rgba(255,255,255,.58);
-  border-radius: 24px;
-  background: rgba(255,255,255,.9);
-  box-shadow: 0 28px 80px rgba(0,0,0,.38), inset 0 1px rgba(255,255,255,.9);
-  backdrop-filter: blur(22px);
-}
-.search-btn, .btn-primary, .btn-apply, .sidebar-btn {
-  background: linear-gradient(135deg, #36cc70, #1da653);
-  box-shadow: 0 10px 25px rgba(40,180,99,.24);
-}
-.search-btn { border-radius: 17px; padding: 14px 26px; }
-.hero-stats { gap: clamp(26px,6vw,74px); }
-.stat-num { font-weight: 500; }
-.stat-lbl { letter-spacing: .14em; }
+.logo { color: #fff; text-transform: uppercase; letter-spacing: -.055em; font-size: 1.15rem; }
+.logo em { color: #55df91; }
+.nav-left a, .nav-right a { color: rgba(255,255,255,.72); font-size: .78rem; letter-spacing: .035em; }
+.nav-left a:hover, .nav-right a:hover { color: #fff; background: rgba(255,255,255,.1); transform: translateY(-1px); }
+.nav-left a.active { color: #65e69b; background: rgba(39,183,104,.15); }
+.nav-btn { color: #0b110d !important; background: #fff !important; border-radius: 13px !important; }
+.nav-btn:hover { background: #5be193 !important; opacity: 1 !important; }
+.hamburger span { background: #fff; }
 
-.filter-bar {
-  top: 108px;
-  width: min(1180px, calc(100% - 32px));
-  margin: 22px auto;
-  border: 1px solid rgba(255,255,255,.9);
-  border-radius: 24px;
-  background: rgba(255,255,255,.76);
-  box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(22px) saturate(140%);
-}
-.filter-chip, .view-btn { border-radius: 14px; background: rgba(255,255,255,.68); }
-.filter-chip.active, .view-btn.active { background: #101311; border-color: #101311; }
-
-.main-content {
-  width: min(1380px, calc(100% - 32px));
-  margin: 0 auto 70px;
-  height: min(760px, calc(100vh - 170px));
-  border: 1px solid rgba(255,255,255,.95);
-  border-radius: 34px;
-  overflow: hidden;
-  background: rgba(255,255,255,.58);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(24px);
-}
-.listings-panel { padding: 28px; }
-.card, .feat-card, .page-card, .step-card, .agent-card-full, .mortgage-card, .search-sidebar {
-  border: 1px solid rgba(255,255,255,.95);
-  background: rgba(255,255,255,.76);
-  box-shadow: 0 12px 35px rgba(24,63,41,.07), inset 0 1px rgba(255,255,255,.95);
-  backdrop-filter: blur(18px) saturate(130%);
-}
-.card:hover, .feat-card:hover, .page-card:hover, .step-card:hover, .agent-card-full:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 24px 60px rgba(24,63,41,.14);
-}
-.card-img, .feat-card-img { background: #e2e2e2; }
-.card-img img, .feat-card-img img, .nh-card img { filter: grayscale(1); }
-.card-badge.rent, .card-badge.shortlet { background: var(--sage); }
-
-.section { padding: 120px 24px; }
-.section-label, .page-section-label { color: var(--sage); letter-spacing: .18em; }
-.section-title, .page-section-title { font-weight: 500; letter-spacing: -.055em; }
-.section-title { font-size: clamp(2.6rem,5vw,5.2rem); }
-.section-title em, .page-section-title em { color: var(--sage); }
-.section-row { align-items: center; }
-.see-all { color: var(--sage); text-transform: uppercase; letter-spacing: .12em; font-size: .7rem; }
-
-.nh-section { background: #060807; padding: 120px 0; border-radius: 42px; margin: 0 16px; overflow: hidden; }
-.nh-inner { max-width: 1320px; }
-.nh-card { border-radius: 28px; border: 1px solid rgba(255,255,255,.12); }
-.nh-card::after { content:''; position:absolute; inset:0; background:linear-gradient(transparent 30%,rgba(0,0,0,.78)); }
-.nh-overlay { z-index: 1; }
-
-.mortgage-wrap { background: transparent; padding: 140px 24px; }
-.mortgage-inner { gap: clamp(50px,8vw,130px); }
-.mortgage-title { font-size: clamp(2.8rem,5vw,5.4rem); font-weight: 500; letter-spacing: -.06em; }
-.mortgage-feat-list li::before { background: var(--sage); }
-
-.page-hero {
-  min-height: 58vh;
-  padding: 190px 24px 90px;
+/* Home hero: actual visual change, no longer a centered dark block */
+.hero {
+  min-height: 94svh;
+  padding: 190px max(6vw,24px) 72px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  background: #060807;
+  align-items: flex-start;
+  justify-content: flex-end;
+  text-align: left;
+  background-image:
+    linear-gradient(90deg, rgba(4,10,6,.88) 0%, rgba(4,10,6,.58) 47%, rgba(4,10,6,.12) 78%),
+    linear-gradient(0deg, rgba(4,10,6,.68), transparent 52%),
+    url('/assets/luxury-villa.png');
+  background-size: cover;
+  background-position: center;
 }
-.page-hero::before { background: radial-gradient(circle at 30% 50%, rgba(40,180,99,.25), transparent 38%); }
-.page-hero h1 { font-size: clamp(2.8rem,6vw,6rem); font-weight: 500; letter-spacing: -.065em; }
-.page-hero h1 em { color: #51dc84; }
-.page-body { padding: 100px 24px 130px; }
-.page-card, .step-card, .agent-card-full { border-radius: 28px; }
-.step-num { background: var(--sage); }
-.page-card-btn { color: var(--sage); background: var(--sage-light); border-color: transparent; border-radius: 12px; }
-
-footer { background: #161a18; border-radius: 42px 42px 0 0; }
-.footer-logo, .footer-col h4 { color: #fff; }
-.footer-logo em { color: #55dd87; }
-
-/* Reversible entrance/exit motion. Elements fade back out after leaving either edge. */
-.reveal-on-scroll {
-  opacity: 0;
-  transform: translate3d(0, 72px, 0) scale(.975);
-  filter: blur(8px);
-  transition: opacity .85s cubic-bezier(.2,.75,.2,1), transform .85s cubic-bezier(.2,.75,.2,1), filter .85s ease;
-  will-change: opacity, transform, filter;
+.hero::before {
+  background: linear-gradient(110deg, rgba(45,207,112,.14), transparent 32%);
+  pointer-events: none;
 }
-.reveal-on-scroll.is-visible { opacity: 1; transform: translate3d(0,0,0) scale(1); filter: blur(0); }
+.hero::after {
+  content: 'CURATED HOMES  •  VERIFIED AGENTS  •  LOCAL EXPERTISE';
+  position: absolute;
+  right: max(3vw,24px);
+  bottom: 32px;
+  writing-mode: vertical-rl;
+  color: rgba(255,255,255,.62);
+  font-size: .57rem;
+  letter-spacing: .2em;
+}
+.hero-badge { margin-bottom: 18px; color: #76eba7; background: rgba(8,22,14,.36); border-color: rgba(255,255,255,.2); backdrop-filter: blur(16px); }
+.hero h1 {
+  max-width: 850px;
+  margin: 0 0 22px;
+  font-size: clamp(3.3rem, 7.3vw, 7.3rem);
+  font-weight: 500;
+  line-height: .91;
+  letter-spacing: -.075em;
+  text-wrap: balance;
+}
+.hero h1 em { color: #56e08f; -webkit-text-stroke: 0; }
+.hero-sub { max-width: 530px; margin: 0 0 34px; color: rgba(255,255,255,.74); font-size: 1rem; }
+.search-box {
+  width: min(820px,100%);
+  max-width: none;
+  margin: 0 0 36px;
+  padding: 8px 8px 8px 18px;
+  border: 1px solid rgba(255,255,255,.5);
+  border-radius: 20px;
+  background: rgba(255,255,255,.9);
+  box-shadow: 0 26px 70px rgba(0,0,0,.32);
+  backdrop-filter: blur(24px);
+}
+.search-btn, .btn-primary, .btn-apply, .sidebar-btn, .btn-signin {
+  border-radius: 14px;
+  background: linear-gradient(135deg,#39cf7b,#159b50);
+  color: #fff;
+  box-shadow: 0 11px 26px rgba(30,170,91,.24);
+}
+.search-btn:hover, .btn-primary:hover, .btn-apply:hover, .sidebar-btn:hover, .btn-signin:hover {
+  opacity: 1;
+  background: linear-gradient(135deg,#4bdd89,#118846);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px rgba(30,170,91,.32);
+}
+.hero-stats { justify-content: flex-start; gap: clamp(24px,4vw,58px); }
+.stat-num { font-size: 1.5rem; font-weight: 600; }
+.stat-lbl { color: rgba(255,255,255,.54); letter-spacing: .12em; }
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
-  .reveal-on-scroll { opacity: 1; transform: none; filter: none; }
+/* Filter island + discovery layout */
+.filter-bar {
+  top: 100px;
+  width: min(1240px,calc(100% - 36px));
+  margin: 26px auto;
+  padding: 10px;
+  border: 1px solid rgba(255,255,255,.9);
+  border-radius: 20px;
+  background: rgba(255,255,255,.78);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(24px) saturate(140%);
+}
+.filter-chip, .view-btn { border-radius: 12px; background: rgba(255,255,255,.7); }
+.filter-chip:hover, .view-btn:hover { border-color: var(--sage); color: var(--sage); transform: translateY(-1px); }
+.filter-chip.active, .view-btn.active { color: #fff; background: #101813; border-color: #101813; }
+.main-content {
+  grid-template-columns: minmax(0,1.55fr) minmax(330px,.75fr);
+  width: min(1440px,calc(100% - 36px));
+  height: min(780px,calc(100vh - 158px));
+  margin: 0 auto 70px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.95);
+  border-radius: 34px;
+  background: rgba(255,255,255,.54);
+  box-shadow: var(--shadow);
+}
+.listings-panel { padding: 26px; }
+.listings-grid { gap: 18px; }
+
+/* Image-first property cards */
+.card, .feat-card {
+  border: 0;
+  border-radius: 26px;
+  background: #fff;
+  box-shadow: 0 12px 34px rgba(13,46,26,.09);
+  transition: transform .55s cubic-bezier(.2,.8,.2,1), box-shadow .55s ease;
+}
+.card:hover, .feat-card:hover { transform: translateY(-10px); box-shadow: 0 30px 70px rgba(13,46,26,.2); }
+.card-img { height: 220px; }
+.card-img img, .feat-card-img img, .nh-card img, .modal-gallery img {
+  filter: none;
+  transition: transform .75s cubic-bezier(.2,.8,.2,1), filter .4s ease;
+}
+.card:hover img, .feat-card:hover img, .nh-card:hover img { transform: scale(1.075); filter: saturate(1.08) contrast(1.02); }
+.card-body { padding: 18px; }
+.card-price { font-size: 1.18rem; }
+.card-badge, .feat-card-badge { top: 14px; left: 14px; padding: 6px 11px; background: rgba(9,17,12,.78); backdrop-filter: blur(12px); }
+.card-save { top: 12px; right: 12px; width: 36px; height: 36px; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.card-save:hover { color: #fff; background: var(--sage); transform: rotate(8deg) scale(1.08); }
+.map-panel { border: 0; }
+.map-placeholder { background: #dfeae3; }
+.map-overlay-card { border: 1px solid rgba(255,255,255,.8); border-radius: 20px; background: rgba(255,255,255,.84); backdrop-filter: blur(18px); }
+.map-overlay-img { width: 70px; height: 66px; border-radius: 14px; }
+.map-pin:hover, .map-pin.active { background: var(--sage); border-color: var(--sage); }
+
+/* Editorial content sections */
+.section { max-width: 1320px; padding: 130px 24px; }
+.section-label, .page-section-label { color: var(--sage); letter-spacing: .2em; }
+.section-title, .page-section-title { font-weight: 500; letter-spacing: -.055em; }
+.section-title { max-width: 760px; font-size: clamp(2.8rem,5.7vw,5.8rem); line-height: .96; }
+.section-title em, .page-section-title em { color: var(--sage); }
+.see-all { color: var(--ink); padding: 12px 18px; border: 1px solid var(--border-dark); border-radius: 50px; text-transform: uppercase; letter-spacing: .1em; font-size: .66rem; }
+.see-all:hover { color: #fff; background: var(--ink); transform: translateX(3px); }
+.featured-grid { grid-template-columns: 1.15fr .85fr .85fr; gap: 22px; align-items: start; }
+.featured-grid .feat-card:nth-child(2) { margin-top: 80px; }
+.featured-grid .feat-card:nth-child(3) { margin-top: 28px; }
+.feat-card-img { height: 300px; }
+.featured-grid .feat-card:first-child .feat-card-img { height: 420px; }
+
+.nh-section { margin: 0 18px; padding: 120px 0; border-radius: 44px; background: #08100b; overflow: hidden; }
+.nh-inner { max-width: 1360px; }
+.nh-grid { gap: 16px; }
+.nh-card { min-height: 240px; border: 1px solid rgba(255,255,255,.12); border-radius: 26px; }
+.nh-card:first-child { min-height: 500px; }
+.nh-card::after { content:''; position:absolute; inset:0; background:linear-gradient(transparent 35%,rgba(3,10,6,.78)); transition: background .4s; }
+.nh-card:hover::after { background: linear-gradient(transparent 20%,rgba(20,119,64,.74)); }
+.nh-overlay { z-index: 1; transition: transform .4s ease; }
+.nh-card:hover .nh-overlay { transform: translateY(-8px); }
+
+/* Mortgage section becomes a graphic split panel */
+.mortgage-wrap { margin: 20px 18px 120px; padding: 120px max(4vw,24px); border-radius: 44px; background: linear-gradient(120deg,#e5f8ec 0%,#f8fbf9 58%); overflow: hidden; }
+.mortgage-inner { gap: clamp(48px,8vw,120px); }
+.mortgage-title { font-size: clamp(3rem,5.6vw,5.8rem); font-weight: 500; line-height: .95; letter-spacing: -.065em; }
+.mortgage-card { padding: 32px; border: 1px solid rgba(255,255,255,.94); border-radius: 30px; background: rgba(255,255,255,.78); box-shadow: 0 30px 80px rgba(13,65,33,.14); backdrop-filter: blur(22px); transform: rotate(1.2deg); transition: transform .5s ease, box-shadow .5s ease; }
+.mortgage-card:hover { transform: rotate(0) translateY(-8px); box-shadow: 0 40px 90px rgba(13,65,33,.2); }
+.field-input-wrap, .signin-input-wrap, .price-input-wrap { border-radius: 14px; background: rgba(245,249,246,.92); }
+.field-input-wrap:focus-within, .signin-input-wrap:focus-within, .price-input-wrap:focus-within { border-color: var(--sage); box-shadow: 0 0 0 4px rgba(39,183,104,.1); }
+.mortgage-results { border-radius: 22px; background: #0b1710; }
+
+/* Every subpage gets a photographic identity */
+.page-hero {
+  min-height: 62vh;
+  padding: 180px max(6vw,24px) 80px;
+  align-items: flex-start;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-size: cover;
+  background-position: center;
+}
+.page-hero::before { background: linear-gradient(90deg,rgba(4,11,7,.88),rgba(4,11,7,.34) 65%,rgba(4,11,7,.08)); }
+#page-buy .page-hero, #page-sell .page-hero, #page-agents .page-hero { background-image: linear-gradient(90deg,rgba(4,11,7,.82),rgba(4,11,7,.12)),url('/assets/luxury-villa.png'); }
+#page-rent .page-hero, #page-mortgage .page-hero, #page-help .page-hero { background-image: linear-gradient(90deg,rgba(4,11,7,.84),rgba(4,11,7,.14)),url('/assets/waterfront-apartment.png'); }
+#page-search .page-hero, #page-agent-dash .page-hero, #page-sell-contact .page-hero, #page-admin-dash .page-hero { background-image: linear-gradient(90deg,rgba(4,11,7,.84),rgba(4,11,7,.18)),url('/assets/abuja-neighborhood.png'); }
+.page-hero h1 { max-width: 850px; font-size: clamp(3.2rem,7vw,7rem); font-weight: 500; line-height: .92; letter-spacing: -.07em; }
+.page-hero h1 em { color: #5ae393; }
+.page-hero p { max-width: 580px; margin: 8px 0 0; color: rgba(255,255,255,.73); }
+.page-body { max-width: 1260px; padding: 110px 24px 140px; }
+.page-section-title { max-width: 760px; font-size: clamp(2rem,4vw,4rem); line-height: 1; margin-bottom: 44px; }
+.page-cards { gap: 18px; }
+.page-card, .step-card, .agent-card-full, .review-card, .review-form {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.95);
+  border-radius: 26px;
+  background: rgba(255,255,255,.8);
+  box-shadow: 0 12px 36px rgba(13,46,26,.07);
+  backdrop-filter: blur(18px);
+}
+.page-card { min-height: 255px; padding: 30px; }
+.page-card::after { content:'↗'; position:absolute; right:24px; top:24px; font-size:1.1rem; opacity:.26; transition: transform .4s,opacity .4s; }
+.page-card:hover, .step-card:hover, .agent-card-full:hover { transform: translateY(-9px); box-shadow: 0 28px 64px rgba(13,46,26,.14); border-color: rgba(39,183,104,.32); }
+.page-card:hover::after { opacity:1; transform: translate(4px,-4px); color:var(--sage); }
+.page-card-icon { width: 54px; height: 54px; display:grid; place-items:center; border-radius:17px; background:var(--sage-light); font-size:1.45rem; }
+.page-card-btn { color: var(--ink); background: transparent; border: 0; padding: 8px 0; }
+.page-card-btn:hover { color: var(--sage); background: transparent; transform: translateX(5px); }
+.steps-grid { gap: 14px; }
+.step-card { min-height: 230px; padding: 28px; text-align: left; }
+.step-num { margin: 0 0 38px; background: var(--sage); box-shadow: 0 8px 20px rgba(39,183,104,.25); }
+
+/* Search and agents */
+#page-search .search-page-grid { max-width: 1360px; grid-template-columns: 300px 1fr; padding: 70px 24px 120px; }
+.search-sidebar { top: 110px; padding: 26px; border: 1px solid rgba(255,255,255,.95); border-radius: 24px; box-shadow: var(--shadow-sm); }
+.search-results-grid { gap: 20px; }
+.view-toggle { border-radius: 14px; }
+.view-toggle-btn { padding: 10px 15px; }
+.agents-grid { gap: 20px; }
+.agent-card-full { padding: 34px; }
+.agent-avatar-lg { width: 82px; height: 82px; background: linear-gradient(135deg,#dff8e9,#b9efce); border: 0; transition: transform .4s; }
+.agent-card-full:hover .agent-avatar-lg { transform: scale(1.08) rotate(-4deg); }
+.agent-profile-header { margin-top: 90px; padding: 50px; border:0; border-radius:32px; background:linear-gradient(135deg,#fff,#e9f8ef); box-shadow:var(--shadow); }
+.agent-profile-avatar { width:120px; height:120px; border:5px solid #fff; box-shadow:0 16px 40px rgba(13,46,26,.15); }
+.review-card:hover { transform: translateX(6px); border-color: rgba(39,183,104,.35); }
+
+/* Auth pages become split-screen photographic experiences */
+#page-signin, #page-signup { min-height: 100svh; background-image: linear-gradient(90deg,rgba(4,11,7,.28),rgba(4,11,7,.68)),url('/assets/waterfront-apartment.png'); background-size:cover; background-position:center; padding: 120px 5vw 70px; }
+.signin-wrap { max-width: 1180px; padding: 0; display:flex; justify-content:flex-end; }
+.signin-card { width:min(480px,100%); padding:42px; border:1px solid rgba(255,255,255,.7); border-radius:30px; background:rgba(255,255,255,.86); box-shadow:0 36px 90px rgba(0,0,0,.28); backdrop-filter:blur(28px) saturate(140%); }
+.signin-title { font-size:2rem; font-weight:600; letter-spacing:-.045em; text-align:left; }
+.signin-label { color:#526158; letter-spacing:.08em; }
+.signin-input-wrap { border:1px solid rgba(20,61,35,.13); background:rgba(255,255,255,.68); transition:all .3s; }
+.signin-input-wrap input { padding:14px 15px; }
+.btn-signin { padding:15px; transition:all .35s; }
+.btn-signup { border-radius:14px; padding:14px; }
+.btn-signup:hover { color:#fff; background:#0c1610; border-color:#0c1610; transform:translateY(-2px); }
+.role-opt { border-radius:15px; background:rgba(255,255,255,.65); }
+.role-opt:hover { transform:translateY(-3px); border-color:var(--sage); }
+.role-opt.selected { box-shadow:0 8px 24px rgba(39,183,104,.14); }
+.demo-creds { border-radius:14px; }
+
+/* Property modal */
+.modal-overlay { background:rgba(3,9,5,.72); backdrop-filter:blur(14px); }
+.modal { max-width:980px; border:1px solid rgba(255,255,255,.4); border-radius:32px; box-shadow:0 50px 130px rgba(0,0,0,.42); overflow:hidden; }
+.modal-gallery { min-height:560px; border-radius:0; }
+.modal-body { padding:38px; }
+.modal-price { font-size:1.75rem; }
+.modal-features, .agent-card-small { border-radius:18px; background:#f0f6f2; }
+.modal-close { width:42px; height:42px; background:rgba(6,14,9,.65); backdrop-filter:blur(12px); }
+.modal-close:hover { background:var(--sage); transform:rotate(90deg); }
+.btn-secondary, .btn-mortgage-sm { border-radius:14px; }
+.btn-secondary:hover, .btn-mortgage-sm:hover { transform:translateY(-2px); border-color:var(--sage); }
+
+/* Dashboard system, shared by agent and admin */
+.page-section-wrap { position:relative; }
+.dash-stats { gap:18px; margin-top:-46px; position:relative; z-index:2; }
+.dash-stat-card { padding:25px; border:1px solid rgba(255,255,255,.92); border-radius:22px; background:rgba(255,255,255,.88); box-shadow:var(--shadow-sm); backdrop-filter:blur(18px); transition:transform .4s,box-shadow .4s; }
+.dash-stat-card:hover { transform:translateY(-7px); box-shadow:var(--shadow); }
+.dash-stat-num { font-size:2rem; color:var(--sage); }
+.dash-tabs { gap:8px; margin:28px 0; padding:7px; border:1px solid rgba(255,255,255,.9); border-radius:18px; background:rgba(255,255,255,.7); box-shadow:var(--shadow-sm); }
+.dash-tab { margin:0; padding:11px 17px; border:0; border-radius:12px; }
+.dash-tab:hover { color:var(--sage); background:var(--sage-light); }
+.dash-tab.active { color:#fff; background:#101813; border:0; }
+.dash-table-wrap, .dash-form { border:1px solid rgba(255,255,255,.95); border-radius:26px; background:rgba(255,255,255,.82); box-shadow:var(--shadow-sm); backdrop-filter:blur(18px); }
+.dash-table th { padding:15px 18px; background:#edf5f0; }
+.dash-table td { padding:16px 18px; }
+.dash-table tbody tr { transition:background .25s; }
+.dash-table tr:hover td { background:#f4fbf6; }
+.dash-table img { width:72px; height:52px; border-radius:12px; transition:transform .35s; }
+.dash-table tr:hover img { transform:scale(1.08); }
+.dash-btn { padding:8px 13px; border-radius:10px; transition:transform .25s,box-shadow .25s,opacity .25s; }
+.dash-btn:hover { opacity:1; transform:translateY(-2px); box-shadow:0 8px 18px rgba(0,0,0,.12); }
+.dash-btn-approve { background:var(--sage); }
+.dash-form { padding:34px; }
+.dash-form textarea { border-radius:14px; background:#f6f9f7; }
+
+/* Help and footer */
+.help-search { max-width:680px; margin-bottom:70px; padding:8px 8px 8px 20px; border-radius:18px; box-shadow:var(--shadow); }
+.help-search-btn { border-radius:12px; background:var(--ink); padding:12px 24px; }
+.help-search-btn:hover { background:var(--sage); }
+footer { margin:0 18px 18px; padding:76px 42px 34px; border-radius:42px; background:#0b120e; }
+.footer-logo { font-size:1.6rem; }
+.footer-logo em { color:#58e091; }
+.footer-col a:hover { color:#63e49a; transform:translateX(5px); }
+
+/* Admin-specific shell */
+.admin-topbar { position:sticky !important; top:0 !important; left:auto !important; transform:none !important; width:100% !important; height:auto !important; padding:18px 32px !important; border:0 !important; border-bottom:1px solid rgba(255,255,255,.1) !important; border-radius:0 !important; background:rgba(9,17,12,.94) !important; color:#fff; backdrop-filter:blur(20px); }
+.admin-topbar .brand { color:#fff !important; letter-spacing:-.04em; }
+.admin-topbar .brand em { color:#59e092 !important; }
+.admin-topbar-links a { color:rgba(255,255,255,.68) !important; }
+.admin-topbar-links a:hover { color:#fff !important; }
+.admin-topbar-links button { color:#fff !important; background:rgba(255,255,255,.09) !important; border-color:rgba(255,255,255,.18) !important; border-radius:12px !important; transition:all .3s; }
+.admin-topbar-links button:hover { background:var(--sage) !important; transform:translateY(-2px); }
+#page-admin-dash .page-section-wrap { padding-top:0 !important; }
+
+/* Reversible scroll motion */
+.reveal-on-scroll { opacity:0; transform:translate3d(0,64px,0) scale(.98); filter:blur(7px); transition:opacity .8s cubic-bezier(.2,.75,.2,1),transform .8s cubic-bezier(.2,.75,.2,1),filter .8s ease; will-change:opacity,transform,filter; }
+.reveal-on-scroll.is-visible { opacity:1; transform:none; filter:none; }
+
+@media(prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto; }
+  *,*::before,*::after { animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  .reveal-on-scroll { opacity:1; transform:none; filter:none; }
+}
+
+@media(max-width:1000px) {
+  .featured-grid { grid-template-columns:1fr 1fr; }
+  .featured-grid .feat-card:nth-child(2), .featured-grid .feat-card:nth-child(3) { margin-top:0; }
+  .featured-grid .feat-card:first-child { grid-column:1/-1; }
+  .main-content { grid-template-columns:1fr; height:auto; max-height:none; }
+  .listings-panel { overflow:visible; }
+  .map-panel { display:none; }
 }
 
 @media(max-width:760px) {
-  :root { --nav-h: 64px; }
-  nav { width: calc(100% - 20px); left: 10px; top: 10px; padding: 0 18px; border-radius: 20px; }
-  nav.mobile-nav-open .nav-left, nav.mobile-nav-open .nav-right { top: calc(100% + 8px); background: rgba(8,10,9,.95); border: 1px solid rgba(255,255,255,.14); border-radius: 20px; backdrop-filter: blur(24px); }
-  .hero { padding: 130px 18px 80px; }
-  .hero h1 { font-size: clamp(2.7rem,14vw,4.5rem); }
-  .hero::after { font-size: .5rem; bottom: 20px; }
-  .search-box { border-radius: 22px; }
-  .filter-bar { top: 84px; width: calc(100% - 20px); }
-  .main-content { width: calc(100% - 20px); height: auto; max-height: none; border-radius: 26px; }
-  .listings-panel { overflow: visible; padding: 16px; }
-  .section, .mortgage-wrap { padding: 86px 18px; }
-  .nh-section { margin: 0 10px; border-radius: 30px; padding: 84px 0; }
-  .page-hero { min-height: 52vh; padding-top: 145px; }
+  :root { --nav-h:64px; }
+  nav:not(.admin-topbar) { top:10px; width:calc(100% - 20px); padding:0 17px; border-radius:19px; }
+  nav.mobile-nav-open .nav-left, nav.mobile-nav-open .nav-right { top:calc(100% + 8px); background:rgba(9,17,12,.97); border:1px solid rgba(255,255,255,.15); border-radius:18px; backdrop-filter:blur(24px); }
+  .hero { min-height:92svh; padding:145px 18px 54px; }
+  .hero h1 { font-size:clamp(3rem,14vw,4.8rem); }
+  .hero::after { display:none; }
+  .search-box { border-radius:18px; }
+  .hero-stats { gap:18px; }
+  .filter-bar { top:84px; width:calc(100% - 20px); }
+  .main-content { width:calc(100% - 20px); border-radius:26px; }
+  .listings-panel { padding:14px; }
+  .card-img { height:240px; }
+  .section { padding:90px 18px; }
+  .featured-grid { grid-template-columns:1fr; }
+  .featured-grid .feat-card:first-child { grid-column:auto; }
+  .featured-grid .feat-card:first-child .feat-card-img, .feat-card-img { height:300px; }
+  .nh-section, .mortgage-wrap, footer { margin-left:10px; margin-right:10px; border-radius:28px; }
+  .mortgage-wrap { padding:82px 18px; }
+  .mortgage-card { transform:none; padding:22px; }
+  .page-hero { min-height:56vh; padding:150px 20px 64px; }
+  .page-body { padding:80px 18px 100px; }
+  .page-cards, .steps-grid { grid-template-columns:1fr; }
+  #page-search .search-page-grid { grid-template-columns:1fr; padding:50px 14px 90px; }
+  .search-sidebar { position:relative; top:auto; }
+  #page-signin, #page-signup { padding:100px 12px 30px; }
+  .signin-card { padding:28px 22px; border-radius:24px; }
+  .modal { grid-template-columns:1fr; border-radius:24px; }
+  .modal-gallery { min-height:260px; }
+  .dash-stats { grid-template-columns:1fr 1fr; margin-top:-30px; }
+  .dash-tabs { overflow-x:auto; flex-wrap:nowrap; }
+  .dash-tab { white-space:nowrap; }
+  footer { padding:58px 24px 28px; }
+}
+
+@media(max-width:480px) {
+  .hero h1 { font-size:2.9rem; }
+  .hero-stats { display:grid; grid-template-columns:1fr 1fr; width:100%; }
+  .search-box { background:rgba(255,255,255,.94); }
+  .dash-stats { grid-template-columns:1fr; }
+  .section-title,.mortgage-title { font-size:2.65rem; }
 }

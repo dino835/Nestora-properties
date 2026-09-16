@@ -139,7 +139,7 @@
       <div class="map-pin" style="top:72%;left:40%">₦5.5M/yr</div>
       <div class="map-pin" style="top:24%;left:74%">₦120M</div>
       <div class="map-overlay-card">
-        <img class="map-overlay-img" src="/assets/placeholder.svg" alt="placeholder"/>
+        <img class="map-overlay-img" src="/assets/luxury-villa.png" alt="Contemporary luxury villa"/>
         <div class="map-overlay-info">
           <div class="map-overlay-price">₦45,000,000</div>
           <div class="map-overlay-title">3-Bed Terrace, Lekki Phase 1</div>
@@ -168,29 +168,29 @@
     <div class="section-row" style="margin-bottom:32px;">
       <div>
         <div class="section-label">Explore</div>
-        <h2 class="section-title" style="color:var(--white);">Popular <em style="color:#c8871f;">Neighbourhoods</em></h2>
+        <h2 class="section-title" style="color:var(--white);">Popular <em style="color:#56e08f;">Neighbourhoods</em></h2>
       </div>
       <a class="see-all" href="#" onclick="showPage('buy');return false;">See all →</a>
     </div>
     <div class="nh-grid">
       <div class="nh-card">
-        <img src="/assets/placeholder.svg" alt="placeholder"/>
+        <img src="/assets/luxury-villa.png" alt="Luxury homes in Lekki"/>
         <div class="nh-overlay"><div class="nh-name">Lekki</div><div class="nh-count">2,340 listings</div></div>
       </div>
       <div class="nh-card">
-        <img src="/assets/placeholder.svg" alt="placeholder"/>
+        <img src="/assets/waterfront-apartment.png" alt="Waterfront apartments in Ikoyi"/>
         <div class="nh-overlay"><div class="nh-name">Ikoyi</div><div class="nh-count">890 listings</div></div>
       </div>
       <div class="nh-card">
-        <img src="/assets/placeholder.svg" alt="placeholder"/>
+        <img src="/assets/abuja-neighborhood.png" alt="Victoria Island neighborhood"/>
         <div class="nh-overlay"><div class="nh-name">Victoria Island</div><div class="nh-count">1,120 listings</div></div>
       </div>
       <div class="nh-card">
-        <img src="/assets/placeholder.svg" alt="placeholder"/>
+        <img src="/assets/luxury-villa.png" alt="Modern homes in Maitama"/>
         <div class="nh-overlay"><div class="nh-name">Maitama, Abuja</div><div class="nh-count">670 listings</div></div>
       </div>
       <div class="nh-card">
-        <img src="/assets/placeholder.svg" alt="placeholder"/>
+        <img src="/assets/abuja-neighborhood.png" alt="Residential properties in Port Harcourt"/>
         <div class="nh-overlay"><div class="nh-name">GRA, Port Harcourt</div><div class="nh-count">440 listings</div></div>
       </div>
     </div>
@@ -267,9 +267,9 @@
       <div class="mortgage-donut-wrap">
         <canvas id="mc-donut" width="90" height="90"></canvas>
         <div class="donut-legend">
-          <div class="legend-item"><span class="legend-dot" style="background:#1c5c3a"></span>Principal</div>
-          <div class="legend-item"><span class="legend-dot" style="background:#c8871f"></span>Total Interest</div>
-          <div class="legend-item"><span class="legend-dot" style="background:#e8f2ec"></span>Down Payment</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#159b50"></span>Principal</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#56e08f"></span>Total Interest</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#e5f8ec"></span>Down Payment</div>
         </div>
       </div>
       <button class="btn-apply">🏦 Apply for Pre-Approval</button>
@@ -753,7 +753,7 @@
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal" id="modal">
     <div class="modal-gallery">
-      <img id="modalImg" src="/assets/placeholder.svg" alt="placeholder"/>
+      <img id="modalImg" src="/assets/luxury-villa.png" alt="Featured property"/>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
@@ -953,11 +953,22 @@ function setView(mode, btn) {
   }
 }
 
+var propertyImages = [
+  '/assets/luxury-villa.png',
+  '/assets/waterfront-apartment.png',
+  '/assets/abuja-neighborhood.png'
+];
+function propertyImage(p, offset) {
+  var key = String((p && (p.id || p.title)) || 'nestora');
+  var total = key.split('').reduce(function(sum, char){ return sum + char.charCodeAt(0); }, offset || 0);
+  return propertyImages[total % propertyImages.length];
+}
+
 // ── RENDER CARDS ──
 function makeCardHTML(p) {
   var badgeClass = p.badge === 'For Rent' ? 'rent' : p.badge === 'Shortlet' ? 'shortlet' : '';
   return '<div class="card-img">' +
-    '<img src="/assets/placeholder.svg" alt="placeholder" loading="lazy"/>' +
+    '<img src="' + propertyImage(p) + '" alt="' + p.title + '" loading="lazy"/>' +
     '<span class="card-badge ' + badgeClass + '">' + p.badge + '</span>' +
     '<button class="card-save" onclick="event.stopPropagation();toggleSave(this)">' +
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
@@ -1004,7 +1015,7 @@ function renderFeatured() {
     card.className = 'feat-card';
     card.style.animationDelay = (i * 0.1) + 's';
     card.innerHTML =
-      '<div class="feat-card-img"><img src="/assets/placeholder.svg" alt="placeholder" loading="lazy"/>' +
+      '<div class="feat-card-img"><img src="' + propertyImage(p) + '" alt="' + p.title + '" loading="lazy"/>' +
       '<span class="feat-card-badge">' + p.badge + '</span></div>' +
       '<div class="feat-card-body">' +
         '<div class="feat-card-price">' + p.priceStr + '</div>' +
@@ -1075,7 +1086,7 @@ function renderSearchGrid() {
     card.className = 'feat-card';
     card.style.animationDelay = (i * 0.04) + 's';
     card.innerHTML =
-      '<div class="feat-card-img"><img src="/assets/placeholder.svg" alt="placeholder" loading="lazy"/>' +
+      '<div class="feat-card-img"><img src="' + propertyImage(p) + '" alt="' + p.title + '" loading="lazy"/>' +
       '<span class="feat-card-badge">' + p.badge + '</span></div>' +
       '<div class="feat-card-body">' +
         '<div class="feat-card-price">' + p.priceStr + '</div>' +
@@ -1155,7 +1166,7 @@ async function closeAllPopupsAndOpen(id) {
 var _modalMapInstance = null;
 function openModal(p) {
   window._currentModalProperty = p;
-  document.getElementById('modalImg').src = '/assets/placeholder.svg';
+  document.getElementById('modalImg').src = propertyImage(p, 1);
   document.getElementById('modalTitle').textContent = p.title;
   document.getElementById('modalAddr').querySelector('span').textContent = p.location;
   document.getElementById('modalPrice').innerHTML = p.priceStr + ' <span>' + p.badge + '</span>';
@@ -1319,7 +1330,7 @@ function drawDonut(canvasId, principal, interest, down) {
   var ctx = canvas.getContext('2d');
   var total = principal + interest + down;
   if (total <= 0) return;
-  var slices = [{val:principal,color:'#1c5c3a'},{val:interest,color:'#c8871f'},{val:down,color:'#e8f2ec'}];
+  var slices = [{val:principal,color:'#159b50'},{val:interest,color:'#56e08f'},{val:down,color:'#e5f8ec'}];
   ctx.clearRect(0, 0, 90, 90);
   var start = -Math.PI/2;
   slices.forEach(function(s){
@@ -1556,7 +1567,7 @@ async function renderAgentDashboard() {
     statCard(currentUser.verified ? 'Yes' : 'No', 'Verified');
 
   var rows = mine.map(function(p){
-    return '<tr><td><img src="/assets/placeholder.svg" alt="placeholder"/></td><td>' + p.title + '<br><span style="color:var(--ink-3);font-size:0.78rem;">' + p.location + '</span></td>' +
+    return '<tr><td><img src="' + propertyImage(p, 2) + '" alt="Property thumbnail"/></td><td>' + p.title + '<br><span style="color:var(--ink-3);font-size:0.78rem;">' + p.location + '</span></td>' +
       '<td>' + p.priceStr + '</td>' +
       '<td><span class="status-badge status-' + p.status + '">' + p.status + '</span>' + (p.verifiedProperty ? ' <span class="trust-badge verified-property" style="font-size:0.6rem;">Verified</span>' : '') + '</td>' +
       '<td><button class="dash-btn dash-btn-ghost" onclick="closeAllPopupsAndOpen(' + p.id + ')">View</button>' +
@@ -1578,7 +1589,7 @@ async function renderAgentDashboard() {
     statCard(fmtN(totalAnnualRent), 'Total Listed Rent/yr');
 
   var rentalRows = rentals.map(function(p){
-    return '<tr><td><img src="/assets/placeholder.svg" alt="placeholder"/></td><td>' + p.title + '<br><span style="color:var(--ink-3);font-size:0.78rem;">' + p.location + '</span></td>' +
+    return '<tr><td><img src="' + propertyImage(p, 2) + '" alt="Property thumbnail"/></td><td>' + p.title + '<br><span style="color:var(--ink-3);font-size:0.78rem;">' + p.location + '</span></td>' +
       '<td>' + p.priceStr + '</td>' +
       '<td><span class="status-badge status-' + p.status + '">' + p.status + '</span>' + (p.verifiedProperty ? ' <span class="trust-badge verified-property" style="font-size:0.6rem;">Verified</span>' : '') + '</td>' +
       '<td><button class="dash-btn dash-btn-ghost" onclick="closeAllPopupsAndOpen(' + p.id + ')">View</button>' +
@@ -1662,7 +1673,7 @@ function readListingForm(prefix) {
     parking: parseInt(document.getElementById(prefix + '-parking').value) || 0,
     lat: parseFloat(document.getElementById(prefix + '-lat').value) || null,
     lng: parseFloat(document.getElementById(prefix + '-lng').value) || null,
-    img: document.getElementById(prefix + '-img').value.trim() || '/assets/placeholder.svg',
+    img: document.getElementById(prefix + '-img').value.trim() || propertyImages[0],
     desc: document.getElementById(prefix + '-desc').value.trim() || 'No description provided.',
     tags: [],
     type: 'apartment',
@@ -1784,7 +1795,7 @@ async function viewAgentProfile(id) {
         var card = document.createElement('div');
         card.className = 'feat-card';
         card.innerHTML =
-          '<div class="feat-card-img"><img src="/assets/placeholder.svg" alt="placeholder" loading="lazy"/><span class="feat-card-badge">' + p.badge + '</span></div>' +
+          '<div class="feat-card-img"><img src="' + propertyImage(p) + '" alt="' + p.title + '" loading="lazy"/><span class="feat-card-badge">' + p.badge + '</span></div>' +
           '<div class="feat-card-body"><div class="feat-card-price">' + p.priceStr + '</div><div class="feat-card-title">' + p.title + (p.verifiedProperty ? ' <span class="trust-badge verified-property" style="font-size:0.58rem;">Verified</span>' : '') + '</div>' +
           '<div class="feat-card-loc">' + p.location + '</div></div>';
         card.addEventListener('click', function(){ openModal(p); });
