@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard – Nestora Properties</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<style>
+  body { background: var(--paper); }
+  .admin-topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 32px; border-bottom: 1px solid var(--border); background: var(--white);
+  }
+  .admin-topbar .brand { font-family: var(--font-head); font-weight: 700; font-size: 1.15rem; color: var(--ink); }
+  .admin-topbar .brand em { font-style: normal; color: var(--gold); }
+  .admin-topbar-links { display: flex; align-items: center; gap: 18px; font-size: 0.9rem; }
+  .admin-topbar-links a { color: var(--ink-2); text-decoration: none; }
+  .admin-topbar-links a:hover { color: var(--ink); }
+  .admin-topbar-links button {
+    font: inherit; cursor: pointer; border: 1px solid var(--border-dark); background: var(--white);
+    padding: 7px 16px; border-radius: var(--radius); color: var(--ink-2);
+  }
+  .admin-topbar-links button:hover { border-color: var(--ink-3); }
+  #adminGate { padding: 80px 24px; text-align: center; color: var(--ink-3); }
+  @media(max-width:600px) {
+    .admin-topbar { padding: 14px 16px; }
+    .admin-topbar .brand { font-size: 1rem; }
+    .admin-topbar-links { gap: 10px; font-size: 0.82rem; }
+    .admin-topbar-links button { padding: 6px 12px; }
+    .dash-tabs { overflow-x: auto; flex-wrap: nowrap; }
+    .dash-tab { white-space: nowrap; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="admin-topbar">
+  <div class="brand">Nestora <em>Admin</em></div>
+  <div class="admin-topbar-links">
+    <a href="index.html">← Back to site</a>
+    <button onclick="adminLogout()">Log Out</button>
+  </div>
+</nav>
+
+<div id="adminGate"></div>
+
+<div id="page-admin-dash" class="site-page">
+  <div class="page-hero">
+    <h1>Admin <em>Control Center</em></h1>
+    <p>Approve listings, verify agents, and keep Nestora Properties scam-free</p>
+  </div>
+  <div class="page-section-wrap" style="max-width:1200px;margin:0 auto;padding:0 24px 80px;">
+    <div class="dash-stats" id="adminStats"></div>
+    <div class="dash-tabs">
+      <div class="dash-tab active" onclick="switchDashTab('pending')">Pending Listings</div>
+      <div class="dash-tab" onclick="switchDashTab('flagged')">Flagged / Scam Reports</div>
+      <div class="dash-tab" onclick="switchDashTab('agents')">Agent Verification</div>
+      <div class="dash-tab" onclick="switchDashTab('identity')">ID Verification</div>
+      <div class="dash-tab" onclick="switchDashTab('users')">Manage Users</div>
+      <div class="dash-tab" onclick="switchDashTab('leads')">Sell Requests</div>
+      <div class="dash-tab" onclick="switchDashTab('all')">All Listings</div>
+    </div>
+    <div class="dash-panel active" id="admin-panel-pending">
+      <div class="dash-table-wrap"><table class="dash-table" id="adminPendingTable"></table></div>
+    </div>
+    <div class="dash-panel" id="admin-panel-flagged">
+      <div class="dash-table-wrap"><table class="dash-table" id="adminFlaggedTable"></table></div>
+    </div>
+    <div class="dash-panel" id="admin-panel-agents">
+      <div class="dash-table-wrap"><table class="dash-table" id="adminAgentsTable"></table></div>
+    </div>
+    <div class="dash-panel" id="admin-panel-identity">
+      <div class="dash-table-wrap"><table class="dash-table" id="adminIdentityTable"></table></div>
+    </div>
+    <div class="dash-panel" id="admin-panel-users">
+      <div class="dash-table-wrap"><table class="dash-table" id="adminUsersTable"></table></div>
+    </div>
+    <div class="dash-panel" id="admin-panel-leads">
+      <div class="dash-table-wrap"><table class="dash-table" id="adminLeadsTable"></table></div>
+    </div>
+    <div class="dash-panel" id="admin-panel-all">
+      <div class="dash-table-wrap"><table class="dash-table" id="adminAllTable"></table></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_BASE = '/api';
+let authToken = localStorage.getItem('nestora_token') || null;
+let currentUser = null;
+
+async function apiFetch(path, opts) {
+  opts = opts || {};
+  var headers = Object.assign({}, opts.headers || {});
+  if (opts.body && !(opts.body instanceof FormData)) headers['Content-Type'] = 'application/json';
+  if (authToken) headers['Authorization'] = 'Bearer ' + authToken;
+  var res = await fetch(API_BASE + path, Object.assign({}, opts, { headers: headers }));
+  var data = null;
+  try { data = await res.json(); } catch (e) { /* no body */ }
+  if (!res.ok) throw new Error((data && data.error) || ('Request failed (' + res.status + ')'));
+  return data;
+}
+
+function adminLogout() {
+  authToken = null;
+  currentUser = null;
+  localStorage.removeItem('nestora_token');
+  window.location.href = 'index.html';
+}
+
+// Opens a listing on the main site in a new tab so admins can preview it in context.
+function previewProperty(id) {
+  window.open('index.html?property=' + id, '_blank');
+}
+
+function switchDashTab(tab) {
+  var container = document.getElementById('page-admin-dash');
+  container.querySelectorAll('.dash-tab').forEach(function(t){ t.classList.remove('active'); });
+  container.querySelectorAll('.dash-panel').forEach(function(p){ p.classList.remove('active'); });
+  var tabs = Array.prototype.slice.call(container.querySelectorAll('.dash-tab'));
+  var panelIds = ['pending','flagged','agents','identity','users','leads','all'];
+  var idx = panelIds.indexOf(tab);
+  if (tabs[idx]) tabs[idx].classList.add('active');
+  var panel = document.getElementById('admin-panel-' + tab);
+  if (panel) panel.classList.add('active');
+}
+
+function statCard(num, label) {
+  return '<div class="dash-stat-card"><div class="dash-stat-num">' + num + '</div><div class="dash-stat-lbl">' + label + '</div></div>';
+}
+
+async function renderAdminDashboard() {
+  var properties, users, agents, leads, identityPending;
+  try {
+    var [statsData, allPropsData, agentsData, usersData, leadsData, identityData] = await Promise.all([
+      apiFetch('/admin/stats'),
+      apiFetch('/admin/properties'),
+      apiFetch('/admin/agents'),
+      apiFetch('/admin/users'),
+      apiFetch('/leads'),
+      apiFetch('/admin/identity-verifications'),
+    ]);
+    properties = allPropsData.properties;
+    users = usersData.users;
+    agents = agentsData.agents;
+    leads = leadsData.leads;
+    identityPending = identityData.agents;
+
+    document.getElementById('adminStats').innerHTML =
+      statCard(statsData.totalListings, 'Total Listings') +
+      statCard(statsData.pending, 'Pending Approval') +
+      statCard(statsData.flagged, 'Flagged / Reported') +
+      statCard(statsData.totalUsers, 'Registered Users') +
+      statCard(statsData.pendingIdentity, 'ID Verifications') +
+      statCard(statsData.newLeads, 'New Sell Requests');
+  } catch (err) {
+    alert('Could not load admin data: ' + err.message);
+    return;
+  }
+
+  function ownerName(p) {
+    var u = users.find(function(u){ return u.id === p.ownerId; });
+    return u ? u.name + ' (' + u.role + ')' : 'Unknown';
+  }
+
+  function verifyPropBtn(p) {
+    return p.verifiedProperty ?
+      '<button class="dash-btn dash-btn-ghost" onclick="adminUnverifyProperty(' + p.id + ')">Unverify Property</button>' :
+      '<button class="dash-btn dash-btn-approve" onclick="adminVerifyProperty(' + p.id + ')">Verify Property</button>';
+  }
+
+  var pending = properties.filter(function(p){ return p.status === 'pending'; });
+  var flagged = properties.filter(function(p){ return p.status === 'flagged'; });
+
+  document.getElementById('adminPendingTable').innerHTML =
+    '<tr><th>Photo</th><th>Property</th><th>Owner</th><th>Price</th><th>Actions</th></tr>' +
+    (pending.map(function(p){
+      return '<tr><td><img src="' + p.img + '"/></td><td>' + p.title + '<br><span style="color:var(--ink-3);font-size:0.78rem;">' + p.location + '</span></td>' +
+        '<td>' + ownerName(p) + '</td><td>' + p.priceStr + '</td>' +
+        '<td><button class="dash-btn dash-btn-approve" onclick="adminApprove(' + p.id + ')">Approve</button>' +
+        '<button class="dash-btn dash-btn-reject" onclick="adminReject(' + p.id + ')">Reject</button>' +
+        verifyPropBtn(p) +
+        '<button class="dash-btn dash-btn-ghost" onclick="previewProperty(' + p.id + ')">Preview</button></td></tr>';
+    }).join('') || '<tr><td colspan="5" class="dash-empty">No listings awaiting approval.</td></tr>');
+
+  document.getElementById('adminFlaggedTable').innerHTML =
+    '<tr><th>Photo</th><th>Property</th><th>Owner</th><th>Price</th><th>Actions</th></tr>' +
+    (flagged.map(function(p){
+      return '<tr><td><img src="' + p.img + '"/></td><td>' + p.title + '<br><span style="color:var(--ink-3);font-size:0.78rem;">' + p.location + '</span></td>' +
+        '<td>' + ownerName(p) + '</td><td>' + p.priceStr + '</td>' +
+        '<td><button class="dash-btn dash-btn-reject" onclick="adminRemove(' + p.id + ')">Remove (Scam)</button>' +
+        '<button class="dash-btn dash-btn-approve" onclick="adminApprove(' + p.id + ')">Restore / Approve</button>' +
+        '<button class="dash-btn dash-btn-ghost" onclick="previewProperty(' + p.id + ')">Preview</button></td></tr>';
+    }).join('') || '<tr><td colspan="5" class="dash-empty">No flagged or reported listings. 🎉</td></tr>');
+
+  document.getElementById('adminAgentsTable').innerHTML =
+    '<tr><th>Name</th><th>Email</th><th>License</th><th>Status</th><th>Actions</th></tr>' +
+    (agents.map(function(u){
+      return '<tr><td>' + u.name + '</td><td>' + u.email + '</td><td>' + (u.license||'—') + '</td>' +
+        '<td><span class="status-badge status-' + (u.verified?'verified':'unverified') + '">' + (u.verified?'Verified':'Unverified') + '</span></td>' +
+        '<td>' + (u.verified ?
+          '<button class="dash-btn dash-btn-reject" onclick="adminUnverifyAgent(' + u.id + ')">Revoke</button>' :
+          '<button class="dash-btn dash-btn-approve" onclick="adminVerifyAgent(' + u.id + ')">Verify</button><button class="dash-btn dash-btn-reject" onclick="adminDeleteUser(' + u.id + ')">Reject &amp; Delete</button>') +
+        '</td></tr>';
+    }).join('') || '<tr><td colspan="5" class="dash-empty">No agents registered yet.</td></tr>');
+
+  document.getElementById('adminIdentityTable').innerHTML =
+    '<tr><th>Name</th><th>Document Type</th><th>Document Number</th><th>Submitted</th><th>Actions</th></tr>' +
+    (identityPending.map(function(u){
+      return '<tr><td>' + u.name + '</td><td>' + u.idVerification.documentType + '</td><td>' + u.idVerification.documentNumber + '</td>' +
+        '<td>' + new Date(u.idVerification.submittedAt).toLocaleDateString() + '</td>' +
+        '<td><button class="dash-btn dash-btn-approve" onclick="adminApproveIdentity(' + u.id + ')">Approve</button>' +
+        '<button class="dash-btn dash-btn-reject" onclick="adminRejectIdentity(' + u.id + ')">Reject</button></td></tr>';
+    }).join('') || '<tr><td colspan="5" class="dash-empty">No pending identity verification requests.</td></tr>');
+
+  document.getElementById('adminUsersTable').innerHTML =
+    '<tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th></tr>' +
+    users.map(function(u){
+      return '<tr><td>' + u.name + '</td><td>' + u.email + '</td><td style="text-transform:capitalize;">' + u.role + '</td>' +
+        '<td><span class="status-badge status-' + u.status + '">' + u.status + '</span></td><td>' + u.joined + '</td>' +
+        '<td>' + (u.role === 'admin' ? '<span style="color:var(--ink-4);font-size:0.78rem;">Protected</span>' :
+          (u.status === 'active' ?
+            '<button class="dash-btn dash-btn-reject" onclick="adminSuspendUser(' + u.id + ')">Suspend</button>' :
+            '<button class="dash-btn dash-btn-approve" onclick="adminActivateUser(' + u.id + ')">Reactivate</button>') +
+          '<button class="dash-btn dash-btn-ghost" onclick="adminDeleteUser(' + u.id + ')">Delete</button>') +
+        '</td></tr>';
+    }).join('');
+
+  document.getElementById('adminLeadsTable').innerHTML =
+    '<tr><th>Name</th><th>Contact</th><th>Location</th><th>Message</th><th>Status</th><th>Actions</th></tr>' +
+    (leads.map(function(l){
+      return '<tr><td>' + l.name + '</td><td>' + l.email + '<br><span style="color:var(--ink-3);font-size:0.78rem;">' + l.phone + '</span></td>' +
+        '<td>' + (l.location || '—') + '</td><td style="max-width:220px;">' + (l.message || '—') + '</td>' +
+        '<td><span class="status-badge status-' + (l.status === 'contacted' ? 'approved' : 'pending') + '">' + l.status + '</span></td>' +
+        '<td>' + (l.status !== 'contacted' ? '<button class="dash-btn dash-btn-approve" onclick="adminMarkLeadContacted(' + l.id + ')">Mark Contacted</button>' : '') +
+        '<button class="dash-btn dash-btn-ghost" onclick="adminDeleteLead(' + l.id + ')">Delete</button></td></tr>';
+    }).join('') || '<tr><td colspan="6" class="dash-empty">No sell requests yet.</td></tr>');
+
+  document.getElementById('adminAllTable').innerHTML =
+    '<tr><th>Photo</th><th>Property</th><th>Owner</th><th>Price</th><th>Status</th><th>Actions</th></tr>' +
+    properties.map(function(p){
+      return '<tr><td><img src="' + p.img + '"/></td><td>' + p.title + (p.verifiedProperty ? ' <span class="trust-badge verified-property" style="font-size:0.58rem;">Verified</span>' : '') + '</td><td>' + ownerName(p) + '</td><td>' + p.priceStr + '</td>' +
+        '<td><span class="status-badge status-' + p.status + '">' + p.status + '</span></td>' +
+        '<td><button class="dash-btn dash-btn-ghost" onclick="previewProperty(' + p.id + ')">Preview</button>' +
+        verifyPropBtn(p) +
+        '<button class="dash-btn dash-btn-reject" onclick="adminRemove(' + p.id + ')">Delete</button></td></tr>';
+    }).join('');
+}
+
+async function adminApprove(id) {
+  try { await apiFetch('/admin/properties/' + id + '/approve', { method: 'PATCH' }); renderAdminDashboard(); }
+  catch (err) { alert(err.message); }
+}
+async function adminReject(id) {
+  if (!confirm('Reject and remove this pending listing?')) return;
+  try { await apiFetch('/admin/properties/' + id + '/reject', { method: 'PATCH' }); renderAdminDashboard(); }
+  catch (err) { alert(err.message); }
+}
+async function adminRemove(id) {
+  if (!confirm('Permanently remove this listing as a scam/policy violation?')) return;
+  try { await apiFetch('/admin/properties/' + id, { method: 'DELETE' }); renderAdminDashboard(); }
+  catch (err) { alert(err.message); }
+}
+async function adminVerifyAgent(id) {
+  try { await apiFetch('/admin/agents/' + id + '/verify', { method: 'PATCH' }); renderAdminDashboard(); }
+  catch (err) { alert(err.message); }
+}
+async function adminUnverifyAgent(id) {
+  try { await apiFetch('/admin/agents/' + id + '/unverify', { method: 'PATCH' }); renderAdminDashboard(); }
+  catch (err) { alert(err.message); }
+}
+async function adminApproveIdentity(id) {
+  try { await apiFetch('/admin/agents/' + id + '/identity/approve', { method: 'PATCH' }); renderAdminDashboard(); }
+  catch (err) { alert(err.message); }
+}
+async function adminRejectIdentity(id) {
+  try { await apiFetch('/admin/agents/' + id + '/identity/reject', { method: 'PATCH' }); renderAdminDashboard(); }
+  catch (err) { alert(err.message); }
+}
+async function adminVerifyProperty(id) {
+  try { await apiFetch('/admin/properties/' + id + '/verify-property', { method: 'PATCH' }); renderAdminDashboard(); }
+  catch (err) { alert(err.message); }
+}
+async function adminUnverifyProperty(id) {
+  try { await apiFetch('/admin/properties/' + id + '/unverify-property', { method: 'PATCH' }); renderAdminDashboard(); }
+  catch (err) { alert(err.message); }
+}
+async function adminSuspendUser(id) {
+  try { await apiFetch('/admin/users/' + id + '/suspend', { method: 'PATCH' }); renderAdminDashboard(); }
+  catch (err) { alert(err.message); }
+}
+async function adminActivateUser(id) {
+  try { await apiFetch('/admin/users/' + id + '/activate', { method: 'PATCH' }); renderAdminDashboard(); }
+  catch (err) { alert(err.message); }
+}
+async function adminDeleteUser(id) {
+  if (!confirm('Delete this user account permanently?')) return;
+  try { await apiFetch('/admin/users/' + id, { method: 'DELETE' }); renderAdminDashboard(); }
+  catch (err) { alert(err.message); }
+}
+async function adminMarkLeadContacted(id) {
+  try { await apiFetch('/leads/' + id + '/contacted', { method: 'PATCH' }); renderAdminDashboard(); }
+  catch (err) { alert(err.message); }
+}
+async function adminDeleteLead(id) {
+  if (!confirm('Delete this sell request?')) return;
+  try { await apiFetch('/leads/' + id, { method: 'DELETE' }); renderAdminDashboard(); }
+  catch (err) { alert(err.message); }
+}
+
+
+// ── AUTH GATE — only a signed-in admin gets past this ──
+(async function initAdmin() {
+  if (!authToken) {
+    document.getElementById('adminGate').innerHTML = '<p>You must be signed in as an admin to view this page. Redirecting to sign in…</p>';
+    setTimeout(function(){ window.location.href = 'index.html?redirect=admin'; }, 1200);
+    return;
+  }
+  try {
+    var data = await apiFetch('/auth/me');
+    currentUser = data.user;
+  } catch (err) {
+    localStorage.removeItem('nestora_token');
+    document.getElementById('adminGate').innerHTML = '<p>Your session has expired. Redirecting to sign in…</p>';
+    setTimeout(function(){ window.location.href = 'index.html'; }, 1200);
+    return;
+  }
+  if (currentUser.role !== 'admin') {
+    document.getElementById('adminGate').innerHTML = '<p>You do not have permission to view this page. Redirecting…</p>';
+    setTimeout(function(){ window.location.href = 'index.html'; }, 1200);
+    return;
+  }
+  document.getElementById('page-admin-dash').classList.add('active');
+  renderAdminDashboard();
+})();
+</script>
+</body>
+</html>

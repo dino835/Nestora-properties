@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nestora Properties – Find Your Dream Property</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════ NAV ══════════════════════════════════════ -->
+<nav>
+  <ul class="nav-left">
+    <li><a href="#" onclick="showPage('buy');return false;">Buy</a></li>
+    <li><a href="#" onclick="showPage('rent');return false;">Rent</a></li>
+    <li><a href="#" onclick="showPage('sell');return false;">Sell</a></li>
+    <li><a href="#" onclick="showPage('mortgage');return false;">Mortgage</a></li>
+    <li><a href="#" onclick="showPage('agents');return false;">Agents</a></li>
+  </ul>
+  <div class="logo" onclick="showPage('home')">Nestora <em>Properties</em></div>
+  <ul class="nav-right" id="navRight">
+    <li><a href="#" onclick="showPage('help');return false;">Help</a></li>
+    <li><a href="#" onclick="showPage('signin');return false;">Sign In</a></li>
+    <li><a href="#" class="nav-btn" onclick="showPage('signup');return false;">Sign Up</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMobileNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════ HOME PAGE ══════════════════════════════════════ -->
+<div id="page-home" class="site-page active">
+
+<section class="hero">
+  <div class="hero-badge">🇳🇬 Nigeria's #1 Property Platform</div>
+  <h1>Find Your Perfect <em>Home</em><br>Across Nigeria</h1>
+  <p class="hero-sub">Explore thousands of verified properties in Lagos, Abuja, Port Harcourt and beyond.</p>
+
+  <div class="search-box">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="heroSearch" placeholder="Search by city, neighbourhood or address…" oninput="liveSearch(this.value)" onkeydown="if(event.key==='Enter')doSearch()" autocomplete="off"/>
+    <div class="search-divider"></div>
+    <select id="heroType" onchange="liveSearch(document.getElementById('heroSearch').value)">
+      <option value="">All Types</option>
+      <option value="apartment">Apartment</option>
+      <option value="duplex">Duplex</option>
+      <option value="terrace">Terrace</option>
+      <option value="shortlet">Shortlet</option>
+      <option value="land">Land</option>
+    </select>
+    <div class="search-divider"></div>
+    <select id="heroBudget">
+      <option value="">Any Budget</option>
+      <option value="low">Under ₦20M</option>
+      <option value="mid">₦20M – ₦100M</option>
+      <option value="high">₦100M+</option>
+      <option value="rent">Rent/Shortlet</option>
+    </select>
+    <button class="search-btn" onclick="doSearch()">Search</button>
+  </div>
+
+  <div class="hero-stats">
+    <div><span class="stat-num">12,400+</span><span class="stat-lbl">Active Listings</span></div>
+    <div><span class="stat-num">340+</span><span class="stat-lbl">Verified Agents</span></div>
+    <div><span class="stat-num">36</span><span class="stat-lbl">States Covered</span></div>
+    <div><span class="stat-num">98%</span><span class="stat-lbl">Happy Buyers</span></div>
+  </div>
+</section>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <button class="filter-chip active" data-filter="all" onclick="filterListings('all', this)">All Homes</button>
+  <button class="filter-chip" data-filter="sale" onclick="filterListings('sale', this)">For Sale</button>
+  <button class="filter-chip" data-filter="rent" onclick="filterListings('rent', this)">For Rent</button>
+  <button class="filter-chip" data-filter="shortlet" onclick="filterListings('shortlet', this)">Shortlet</button>
+  <button class="filter-chip" data-filter="apartment" onclick="filterListings('apartment', this)">Apartments</button>
+  <button class="filter-chip" data-filter="duplex" onclick="filterListings('duplex', this)">Duplexes</button>
+  <button class="filter-chip" data-filter="abuja" onclick="filterListings('abuja', this)">Abuja</button>
+  <button class="filter-chip" data-filter="lagos" onclick="filterListings('lagos', this)">Lagos</button>
+  <div class="filter-sep"></div>
+  <div class="filter-end">
+    <button class="view-btn active" title="Grid view" onclick="setView('grid',this)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    </button>
+    <button class="view-btn" title="List view" onclick="setView('list',this)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- MAIN SPLIT VIEW -->
+<div class="main-content">
+  <div class="listings-panel">
+    <div class="listings-header">
+      <p class="listings-count" id="listingsCount"><strong>12</strong> properties</p>
+      <select class="sort-select" onchange="sortListings(this.value)">
+        <option value="newest">Sort: Newest First</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="popular">Most Popular</option>
+      </select>
+    </div>
+    <div class="listings-grid" id="listingsGrid"></div>
+  </div>
+  <div class="map-panel">
+    <div class="map-placeholder">
+      <svg class="map-svg" viewBox="0 0 420 700" xmlns="http://www.w3.org/2000/svg">
+        <rect width="420" height="700" fill="#dde5d6"/>
+        <path d="M0 400 Q60 380 80 420 Q100 460 0 480 Z" fill="#8BB8D0" opacity="0.7"/>
+        <path d="M320 600 Q380 580 420 620 L420 700 L320 700 Z" fill="#8BB8D0" opacity="0.7"/>
+        <line x1="0" y1="200" x2="420" y2="200" stroke="#fff" stroke-width="5" opacity="0.6"/>
+        <line x1="0" y1="350" x2="420" y2="350" stroke="#fff" stroke-width="4" opacity="0.4"/>
+        <line x1="0" y1="480" x2="420" y2="480" stroke="#fff" stroke-width="3" opacity="0.3"/>
+        <line x1="120" y1="0" x2="120" y2="700" stroke="#fff" stroke-width="5" opacity="0.6"/>
+        <line x1="260" y1="0" x2="260" y2="700" stroke="#fff" stroke-width="4" opacity="0.4"/>
+        <line x1="340" y1="0" x2="340" y2="700" stroke="#fff" stroke-width="3" opacity="0.3"/>
+        <rect x="10" y="60" width="80" height="50" rx="5" fill="#c4d4b8"/>
+        <rect x="130" y="80" width="100" height="60" rx="5" fill="#c4d4b8"/>
+        <rect x="270" y="50" width="60" height="80" rx="5" fill="#c4d4b8"/>
+        <rect x="360" y="90" width="50" height="50" rx="5" fill="#c4d4b8"/>
+        <rect x="10" y="220" width="70" height="80" rx="5" fill="#c4d4b8"/>
+        <rect x="140" y="210" width="80" height="100" rx="5" fill="#c4d4b8"/>
+        <rect x="280" y="220" width="90" height="90" rx="5" fill="#c4d4b8"/>
+        <rect x="130" y="370" width="100" height="70" rx="5" fill="#c4d4b8"/>
+        <rect x="280" y="370" width="70" height="60" rx="5" fill="#c4d4b8"/>
+        <rect x="10" y="370" width="80" height="60" rx="5" fill="#c4d4b8"/>
+        <circle cx="200" cy="155" r="28" fill="#a8c890" opacity="0.8"/>
+        <text x="200" y="159" text-anchor="middle" font-size="7" fill="#3A7A25" font-family="Syne,sans-serif" font-weight="700">PARK</text>
+        <text x="210" y="30" text-anchor="middle" font-size="10" fill="#5a7a4a" font-family="Syne,sans-serif" font-weight="700">Lagos Island</text>
+      </svg>
+      <div class="map-pin active" style="top:18%;left:30%">₦45M</div>
+      <div class="map-pin" style="top:32%;left:58%">₦28M</div>
+      <div class="map-pin" style="top:48%;left:22%">₦12M/yr</div>
+      <div class="map-pin" style="top:60%;left:65%">₦85M</div>
+      <div class="map-pin" style="top:72%;left:40%">₦5.5M/yr</div>
+      <div class="map-pin" style="top:24%;left:74%">₦120M</div>
+      <div class="map-overlay-card">
+        <img class="map-overlay-img" src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=200&q=80" alt="Property"/>
+        <div class="map-overlay-info">
+          <div class="map-overlay-price">₦45,000,000</div>
+          <div class="map-overlay-title">3-Bed Terrace, Lekki Phase 1</div>
+          <div class="map-overlay-loc">Lagos · 3 bed · 2 bath</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURED -->
+<div class="section">
+  <div class="section-row">
+    <div>
+      <div class="section-label">Hand-picked</div>
+      <h2 class="section-title">Featured <em>Properties</em></h2>
+    </div>
+    <a class="see-all" href="#" onclick="showPage('buy');return false;">Browse all →</a>
+  </div>
+  <div class="featured-grid" id="featuredGrid"></div>
+</div>
+
+<!-- NEIGHBOURHOODS -->
+<div class="nh-section">
+  <div class="nh-inner">
+    <div class="section-row" style="margin-bottom:32px;">
+      <div>
+        <div class="section-label">Explore</div>
+        <h2 class="section-title" style="color:var(--white);">Popular <em style="color:#c8871f;">Neighbourhoods</em></h2>
+      </div>
+      <a class="see-all" href="#" onclick="showPage('buy');return false;">See all →</a>
+    </div>
+    <div class="nh-grid">
+      <div class="nh-card">
+        <img src="https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=600&q=80" alt="Lekki"/>
+        <div class="nh-overlay"><div class="nh-name">Lekki</div><div class="nh-count">2,340 listings</div></div>
+      </div>
+      <div class="nh-card">
+        <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&q=80" alt="Ikoyi"/>
+        <div class="nh-overlay"><div class="nh-name">Ikoyi</div><div class="nh-count">890 listings</div></div>
+      </div>
+      <div class="nh-card">
+        <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&q=80" alt="Victoria Island"/>
+        <div class="nh-overlay"><div class="nh-name">Victoria Island</div><div class="nh-count">1,120 listings</div></div>
+      </div>
+      <div class="nh-card">
+        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&q=80" alt="Maitama"/>
+        <div class="nh-overlay"><div class="nh-name">Maitama, Abuja</div><div class="nh-count">670 listings</div></div>
+      </div>
+      <div class="nh-card">
+        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&q=80" alt="GRA"/>
+        <div class="nh-overlay"><div class="nh-name">GRA, Port Harcourt</div><div class="nh-count">440 listings</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MORTGAGE CALCULATOR -->
+<div class="mortgage-wrap" id="mortgage-section">
+  <div class="mortgage-inner">
+    <div>
+      <div class="mortgage-eyebrow">🏦 Home Financing</div>
+      <h2 class="mortgage-title">Plan Your <em>Mortgage</em><br>With Confidence</h2>
+      <p class="mortgage-desc">Calculate your monthly repayments instantly. Nestora Properties partners with leading Nigerian banks to get you the best rates.</p>
+      <ul class="mortgage-feat-list">
+        <li>Rates from FirstBank, GTBank &amp; Access Bank</li>
+        <li>Flexible tenors from 5 to 20 years</li>
+        <li>NHF (National Housing Fund) loans available</li>
+        <li>Free mortgage advisory from verified consultants</li>
+        <li>Quick pre-approval — decision in 48 hours</li>
+      </ul>
+    </div>
+    <div class="mortgage-card">
+      <div class="mortgage-card-title">🧮 Mortgage Calculator</div>
+      <div class="mortgage-field">
+        <label>Property Price</label>
+        <div class="field-row">
+          <div class="field-input-wrap">
+            <span class="field-prefix">₦</span>
+            <input type="number" id="mc-price" value="45000000" min="1000000" step="500000" oninput="calcMortgage()"/>
+          </div>
+        </div>
+        <input type="range" id="mc-price-slider" min="1000000" max="500000000" step="500000" value="45000000" oninput="syncSlider('price')"/>
+      </div>
+      <div class="mortgage-field">
+        <label>Down Payment</label>
+        <div class="field-row">
+          <div class="field-input-wrap">
+            <span class="field-prefix">₦</span>
+            <input type="number" id="mc-down" value="9000000" min="0" step="500000" oninput="calcMortgage()"/>
+          </div>
+          <span class="field-val" id="mc-down-pct">20%</span>
+        </div>
+        <input type="range" id="mc-down-slider" min="0" max="500000000" step="500000" value="9000000" oninput="syncSlider('down')"/>
+      </div>
+      <div class="mortgage-field">
+        <label>Interest Rate (% p.a.)</label>
+        <div class="field-row">
+          <div class="field-input-wrap">
+            <span class="field-prefix">%</span>
+            <input type="number" id="mc-rate" value="18" min="1" max="35" step="0.5" oninput="calcMortgage()"/>
+          </div>
+        </div>
+        <input type="range" id="mc-rate-slider" min="1" max="35" step="0.5" value="18" oninput="syncSlider('rate')"/>
+      </div>
+      <div class="mortgage-field">
+        <label>Loan Tenor (Years)</label>
+        <div class="field-row">
+          <div class="field-input-wrap">
+            <span class="field-prefix">Yrs</span>
+            <input type="number" id="mc-tenor" value="15" min="1" max="20" step="1" oninput="calcMortgage()"/>
+          </div>
+        </div>
+        <input type="range" id="mc-tenor-slider" min="1" max="20" step="1" value="15" oninput="syncSlider('tenor')"/>
+      </div>
+      <div class="mortgage-results">
+        <span class="mortgage-monthly-label">Monthly Payment</span>
+        <span class="mortgage-monthly-amt" id="mc-monthly">—</span>
+        <div class="mortgage-breakdown">
+          <div><div class="breakdown-val" id="mc-principal">—</div><div class="breakdown-lbl">Loan Amount</div></div>
+          <div><div class="breakdown-val" id="mc-total-interest">—</div><div class="breakdown-lbl">Total Interest</div></div>
+          <div><div class="breakdown-val" id="mc-total">—</div><div class="breakdown-lbl">Total Cost</div></div>
+        </div>
+      </div>
+      <div class="mortgage-donut-wrap">
+        <canvas id="mc-donut" width="90" height="90"></canvas>
+        <div class="donut-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:#1c5c3a"></span>Principal</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#c8871f"></span>Total Interest</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#e8f2ec"></span>Down Payment</div>
+        </div>
+      </div>
+      <button class="btn-apply">🏦 Apply for Pre-Approval</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- end page-home -->
+
+<!-- ══════════════════════════════════════ BUY PAGE ══════════════════════════════════════ -->
+<div id="page-buy" class="site-page">
+  <div class="page-hero">
+    <h1>Buy a <em>Home</em> in Nigeria</h1>
+    <p>Browse thousands of verified properties for sale across Lagos, Abuja, Port Harcourt and beyond.</p>
+  </div>
+  <div class="page-body">
+    <div class="page-section-label">Why Buy With Us</div>
+    <div class="page-section-title">Everything You Need to <em>Buy Smart</em></div>
+    <div class="page-cards">
+      <div class="page-card"><div class="page-card-icon">🔍</div><h3>Verified Listings</h3><p>Every listing on Nestora Properties is verified by our team. No ghost listings, no duplicates — just real properties with real owners.</p><button class="page-card-btn" onclick="showPage('search');return false;">Browse Listings →</button></div>
+      <div class="page-card"><div class="page-card-icon">🤝</div><h3>Expert Agents</h3><p>Work with our network of 340+ certified property consultants who know their markets inside out.</p><button class="page-card-btn" onclick="showPage('agents');return false;">Find an Agent →</button></div>
+      <div class="page-card"><div class="page-card-icon">⚖️</div><h3>Legal Support</h3><p>Our in-house legal team helps with due diligence, title verification, and contract review at competitive rates.</p><button class="page-card-btn" onclick="showPage('help');return false;">Learn More →</button></div>
+      <div class="page-card"><div class="page-card-icon">🏦</div><h3>Mortgage Assistance</h3><p>Get pre-approved fast with our bank partners. Compare rates from multiple lenders in one place.</p><button class="page-card-btn" onclick="showPage('mortgage');return false;">Calculate Now →</button></div>
+      <div class="page-card"><div class="page-card-icon">🗺️</div><h3>Neighbourhood Guides</h3><p>Detailed area guides for Lagos, Abuja, Port Harcourt and 33 other states. Know before you buy.</p><button class="page-card-btn" onclick="showPage('home');return false;">Explore Areas →</button></div>
+      <div class="page-card"><div class="page-card-icon">📊</div><h3>Market Reports</h3><p>Free quarterly reports on property prices, rental yields, and investment hotspots across Nigeria.</p><button class="page-card-btn" onclick="showPage('help');return false;">Read Reports →</button></div>
+    </div>
+    <div class="page-section-label">How It Works</div>
+    <div class="page-section-title">4 Steps to Your <em>New Home</em></div>
+    <div class="steps-grid">
+      <div class="step-card"><div class="step-num">1</div><h4>Search & Shortlist</h4><p>Use our smart filters to find properties that match your needs, budget, and location preferences.</p></div>
+      <div class="step-card"><div class="step-num">2</div><h4>Book Viewings</h4><p>Schedule physical or virtual viewings directly through the platform. Our agents coordinate everything.</p></div>
+      <div class="step-card"><div class="step-num">3</div><h4>Make an Offer</h4><p>Submit offers online with our guided offer tool. We handle negotiation and keep you updated at every step.</p></div>
+      <div class="step-card"><div class="step-num">4</div><h4>Sign & Move In</h4><p>Complete legals, pay securely through our escrow system, and get your keys. We stay with you until completion.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ RENT PAGE ══════════════════════════════════════ -->
+<div id="page-rent" class="site-page">
+  <div class="page-hero">
+    <h1>Rent Your <em>Perfect Space</em></h1>
+    <p>From short-lets to long-term leases — find your ideal home with full tenant protection.</p>
+  </div>
+  <div class="page-body">
+    <div class="page-section-label">Rental Options</div>
+    <div class="page-section-title">Find the Right <em>Rental For You</em></div>
+    <div class="page-cards">
+      <div class="page-card"><div class="page-card-icon">🏠</div><h3>Long-Term Rentals</h3><p>Annual leases on apartments, duplexes, and houses. Verified landlords and transparent agreements.</p><button class="page-card-btn" onclick="goToTypeResults('rent')">Browse Rentals →</button></div>
+      <div class="page-card"><div class="page-card-icon">🏨</div><h3>Shortlets</h3><p>Fully furnished apartments available from 1 night. Perfect for business trips, holidays, or temporary stays.</p><button class="page-card-btn" onclick="goToTypeResults('shortlet')">Browse Shortlets →</button></div>
+      <div class="page-card"><div class="page-card-icon">🏢</div><h3>Corporate Housing</h3><p>Managed serviced apartments for companies. Flexible terms, bills included, and concierge support.</p><button class="page-card-btn" onclick="showPage('help');return false;">Enquire Now →</button></div>
+      <div class="page-card"><div class="page-card-icon">📋</div><h3>Tenant Protect</h3><p>Our tenant protection policy covers deposit disputes, maintenance obligations, and early exit rights.</p><button class="page-card-btn" onclick="showPage('help');return false;">Read Policy →</button></div>
+      <div class="page-card"><div class="page-card-icon">💳</div><h3>Rent Financing</h3><p>Split your annual rent into monthly payments with our Rent Now Pay Later partners.</p><button class="page-card-btn" onclick="showPage('help');return false;">Learn More →</button></div>
+      <div class="page-card"><div class="page-card-icon">🔑</div><h3>Quick Move-In</h3><p>Properties marked "Ready Now" are available within 72 hours — no long waiting periods.</p><button class="page-card-btn" onclick="filterAndGoHome('rent')">See Ready Now →</button></div>
+    </div>
+    <div class="page-section-label">Tenant Rights</div>
+    <div class="page-section-title">Renting <em>Made Transparent</em></div>
+    <div class="steps-grid">
+      <div class="step-card"><div class="step-num">1</div><h4>Search & Apply</h4><p>Apply for properties online with our digital application. Get a response within 24 hours.</p></div>
+      <div class="step-card"><div class="step-num">2</div><h4>Verification</h4><p>Quick credit and ID checks done digitally. No intrusive paperwork or lengthy processes.</p></div>
+      <div class="step-card"><div class="step-num">3</div><h4>Sign Digitally</h4><p>Sign your tenancy agreement online with full legal validity under Nigerian law.</p></div>
+      <div class="step-card"><div class="step-num">4</div><h4>Pay Securely</h4><p>Pay your deposit and rent through our escrow system. Guaranteed refund if property is misrepresented.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ SELL PAGE ══════════════════════════════════════ -->
+<div id="page-sell" class="site-page">
+  <div class="page-hero">
+    <h1>Sell Your <em>Property</em> With Us</h1>
+    <p>We don't offer self-service seller accounts — tell us about your property and a Nestora Properties agent will handle everything for you.</p>
+  </div>
+  <div class="page-body">
+    <div class="page-section-label">Sell With Confidence</div>
+    <div class="page-section-title">Why <em>Sell With Nestora</em></div>
+    <div class="page-cards">
+      <div class="page-card"><div class="page-card-icon">📸</div><h3>Professional Photos</h3><p>Our photographers visit your property and produce stunning listing photos and virtual tours at no extra cost.</p><button class="page-card-btn" onclick="showPage('sell-contact');return false;">Contact Us →</button></div>
+      <div class="page-card"><div class="page-card-icon">📣</div><h3>Mass Reach</h3><p>Your listing appears across Nestora Properties, Google, Facebook, and our partner portals — reaching millions of buyers.</p><button class="page-card-btn" onclick="showPage('sell-contact');return false;">Get Started →</button></div>
+      <div class="page-card"><div class="page-card-icon">💰</div><h3>Free Valuation</h3><p>Get a free in-person appraisal from one of our senior property consultants.</p><button class="page-card-btn" onclick="showPage('agents');return false;">Book Valuation →</button></div>
+      <div class="page-card"><div class="page-card-icon">🧑‍💼</div><h3>Dedicated Agent</h3><p>Every seller is paired with a verified Nestora Properties agent who manages listing, enquiries, and offers on your behalf.</p><button class="page-card-btn" onclick="showPage('sell-contact');return false;">Talk to an Agent →</button></div>
+      <div class="page-card"><div class="page-card-icon">⚡</div><h3>Fast Sale Option</h3><p>Need a quick sale? Our FastSale programme connects you with verified cash buyers. Complete in as little as 14 days.</p><button class="page-card-btn" onclick="showPage('sell-contact');return false;">Learn More →</button></div>
+      <div class="page-card"><div class="page-card-icon">🛡️</div><h3>Secure Transaction</h3><p>All payments handled through our escrow service. Funds released only when all conditions are met.</p><button class="page-card-btn" onclick="showPage('sell-contact');return false;">Read More →</button></div>
+    </div>
+    <div class="page-section-label">Your Selling Journey</div>
+    <div class="page-section-title">From Enquiry to <em>Completion</em></div>
+    <div class="steps-grid">
+      <div class="step-card"><div class="step-num">1</div><h4>Contact Us</h4><p>Send us your property details below. No account or listing form needed — just tell us what you have.</p></div>
+      <div class="step-card"><div class="step-num">2</div><h4>We Assign an Agent</h4><p>A verified Nestora Properties agent reaches out within 24 hours to discuss valuation and photos.</p></div>
+      <div class="step-card"><div class="step-num">3</div><h4>We List & Manage It</h4><p>Your agent publishes the listing, screens enquiries, and negotiates offers on your behalf.</p></div>
+      <div class="step-card"><div class="step-num">4</div><h4>Close the Deal</h4><p>Our legal team handles title transfer and documentation. Get paid securely on completion.</p></div>
+    </div>
+    <div style="text-align:center;margin-top:20px;">
+      <button class="btn-primary" style="width:auto;padding:14px 32px;" onclick="showPage('sell-contact');return false;">📩 Contact Us to Sell Your Property</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ SELL CONTACT / LEAD FORM ══════════════════════════════════════ -->
+<div id="page-sell-contact" class="site-page">
+  <div class="page-hero">
+    <h1>Tell Us About <em>Your Property</em></h1>
+    <p>No seller account required — an agent from our team will reach out to take it from here.</p>
+  </div>
+  <div class="page-section-wrap" style="max-width:640px;margin:0 auto;padding:0 24px 80px;">
+    <div class="dash-form">
+      <div class="signin-error" id="leadError"></div>
+      <div class="signin-success" id="leadSuccess"></div>
+      <div class="signin-field"><label class="signin-label">Full Name</label><div class="signin-input-wrap"><input type="text" id="lead-name" placeholder="e.g. Ngozi Umeh"/></div></div>
+      <div class="signin-field"><label class="signin-label">Email Address</label><div class="signin-input-wrap"><input type="email" id="lead-email" placeholder="you@example.com"/></div></div>
+      <div class="signin-field"><label class="signin-label">Phone Number</label><div class="signin-input-wrap"><input type="text" id="lead-phone" placeholder="080XXXXXXXX"/></div></div>
+      <div class="signin-field"><label class="signin-label">Property Location</label><div class="signin-input-wrap"><input type="text" id="lead-location" placeholder="e.g. Ajah, Lagos"/></div></div>
+      <div class="signin-field"><label class="signin-label">Tell us about your property</label><textarea id="lead-message" placeholder="Type, size, asking price, timeline, etc."></textarea></div>
+      <button class="btn-signin" onclick="submitSellLead()">Send to Nestora Properties</button>
+      <p style="font-size:0.78rem;color:var(--ink-3);margin-top:10px;text-align:center;">A member of our team typically responds within 24 hours.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ MORTGAGE PAGE ══════════════════════════════════════ -->
+<div id="page-mortgage" class="site-page">
+  <div class="page-hero">
+    <h1>Plan Your <em>Mortgage</em></h1>
+    <p>Compare rates, calculate repayments, and get pre-approved in 48 hours.</p>
+  </div>
+  <div class="page-body">
+    <div class="page-section-label">Calculator</div>
+    <div class="page-section-title">Work Out Your <em>Monthly Payments</em></div>
+    <div style="max-width:720px;">
+      <div class="mortgage-card">
+        <div class="mortgage-card-title">🧮 Full Mortgage Calculator</div>
+        <div class="mortgage-field">
+          <label>Property Price</label>
+          <div class="field-row"><div class="field-input-wrap"><span class="field-prefix">₦</span><input type="number" id="mc2-price" value="45000000" oninput="calcMortgage2()"/></div></div>
+          <input type="range" id="mc2-price-s" min="1000000" max="500000000" step="500000" value="45000000" oninput="syncSlider2('price')"/>
+        </div>
+        <div class="mortgage-field">
+          <label>Down Payment</label>
+          <div class="field-row"><div class="field-input-wrap"><span class="field-prefix">₦</span><input type="number" id="mc2-down" value="9000000" oninput="calcMortgage2()"/></div><span class="field-val" id="mc2-pct">20%</span></div>
+          <input type="range" id="mc2-down-s" min="0" max="500000000" step="500000" value="9000000" oninput="syncSlider2('down')"/>
+        </div>
+        <div class="mortgage-field">
+          <label>Interest Rate (% p.a.)</label>
+          <div class="field-row"><div class="field-input-wrap"><span class="field-prefix">%</span><input type="number" id="mc2-rate" value="18" oninput="calcMortgage2()"/></div></div>
+          <input type="range" id="mc2-rate-s" min="1" max="35" step="0.5" value="18" oninput="syncSlider2('rate')"/>
+        </div>
+        <div class="mortgage-field">
+          <label>Loan Tenor (Years)</label>
+          <div class="field-row"><div class="field-input-wrap"><span class="field-prefix">Yrs</span><input type="number" id="mc2-tenor" value="15" oninput="calcMortgage2()"/></div></div>
+          <input type="range" id="mc2-tenor-s" min="1" max="20" step="1" value="15" oninput="syncSlider2('tenor')"/>
+        </div>
+        <div class="mortgage-results">
+          <span class="mortgage-monthly-label">Monthly Payment</span>
+          <span class="mortgage-monthly-amt" id="mc2-monthly">—</span>
+          <div class="mortgage-breakdown">
+            <div><div class="breakdown-val" id="mc2-principal">—</div><div class="breakdown-lbl">Loan Amount</div></div>
+            <div><div class="breakdown-val" id="mc2-interest">—</div><div class="breakdown-lbl">Total Interest</div></div>
+            <div><div class="breakdown-val" id="mc2-total">—</div><div class="breakdown-lbl">Total Cost</div></div>
+          </div>
+        </div>
+        <button class="btn-apply" onclick="showPage('signin');return false;">🏦 Apply for Pre-Approval</button>
+      </div>
+    </div>
+    <div class="page-section-label" style="margin-top:48px;">Partner Banks</div>
+    <div class="page-section-title">Our <em>Lending Partners</em></div>
+    <div class="page-cards">
+      <div class="page-card"><div class="page-card-icon">🏦</div><h3>FirstBank Mortgage</h3><p>Rates from 18% p.a. Tenors up to 20 years. NHF-accredited. Up to 80% LTV for qualified buyers.</p><button class="page-card-btn" onclick="showPage('signin');return false;">Apply Now →</button></div>
+      <div class="page-card"><div class="page-card-icon">💳</div><h3>GTBank HomeLoan</h3><p>Fast approval in 72 hours. Competitive rates for salary earners and self-employed applicants.</p><button class="page-card-btn" onclick="showPage('signin');return false;">Apply Now →</button></div>
+      <div class="page-card"><div class="page-card-icon">🏛️</div><h3>Access Bank Property</h3><p>Flexible repayment plans. No early repayment penalty. Joint mortgage options available.</p><button class="page-card-btn" onclick="showPage('signin');return false;">Apply Now →</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ AGENTS PAGE ══════════════════════════════════════ -->
+<div id="page-agents" class="site-page">
+  <div class="page-hero">
+    <h1>Find a Verified <em>Agent</em></h1>
+    <p>Every agent below is a real, reviewable Nestora Properties account — not a placeholder.</p>
+  </div>
+  <div class="page-body">
+    <div class="page-section-label">Our Agents</div>
+    <div class="page-section-title">Meet Our <em>Agents</em></div>
+    <div class="agents-grid" id="agentsGrid"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ AGENT PUBLIC PROFILE ══════════════════════════════════════ -->
+<div id="page-agent-profile" class="site-page">
+  <div class="page-section-wrap" style="max-width:980px;margin:0 auto;padding:40px 24px 80px;">
+    <div id="agentProfileHeader"></div>
+    <div id="agentProfileListings"></div>
+    <div id="agentProfileReviews"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ SEARCH PAGE ══════════════════════════════════════ -->
+<div id="page-search" class="site-page">
+  <div class="page-hero">
+    <h1>Search <em>Results</em></h1>
+    <p id="searchPageDesc">Showing all available properties</p>
+  </div>
+  <div class="search-page-grid">
+    <div class="search-sidebar">
+      <div class="sidebar-title">Refine Results</div>
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Listing Type</div>
+        <div class="sidebar-radios">
+          <label class="sidebar-radio"><input type="radio" name="s-type" value="" checked onchange="applySearchFilters()"> All</label>
+          <label class="sidebar-radio"><input type="radio" name="s-type" value="sale" onchange="applySearchFilters()"> For Sale</label>
+          <label class="sidebar-radio"><input type="radio" name="s-type" value="rent" onchange="applySearchFilters()"> For Rent</label>
+          <label class="sidebar-radio"><input type="radio" name="s-type" value="shortlet" onchange="applySearchFilters()"> Shortlet</label>
+        </div>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Price Range</div>
+        <div class="price-range-inputs">
+          <div class="price-input-wrap"><span>₦</span><input type="number" id="s-min" placeholder="Min" oninput="applySearchFilters()"/></div>
+          <div class="price-input-wrap"><span>₦</span><input type="number" id="s-max" placeholder="Max" oninput="applySearchFilters()"/></div>
+        </div>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Bedrooms</div>
+        <div class="sidebar-radios">
+          <label class="sidebar-radio"><input type="radio" name="s-beds" value="0" checked onchange="applySearchFilters()"> Any</label>
+          <label class="sidebar-radio"><input type="radio" name="s-beds" value="1" onchange="applySearchFilters()"> 1+</label>
+          <label class="sidebar-radio"><input type="radio" name="s-beds" value="2" onchange="applySearchFilters()"> 2+</label>
+          <label class="sidebar-radio"><input type="radio" name="s-beds" value="3" onchange="applySearchFilters()"> 3+</label>
+          <label class="sidebar-radio"><input type="radio" name="s-beds" value="4" onchange="applySearchFilters()"> 4+</label>
+        </div>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Location</div>
+        <div class="sidebar-radios">
+          <label class="sidebar-radio"><input type="radio" name="s-loc" value="" checked onchange="applySearchFilters()"> All Nigeria</label>
+          <label class="sidebar-radio"><input type="radio" name="s-loc" value="lagos" onchange="applySearchFilters()"> Lagos</label>
+          <label class="sidebar-radio"><input type="radio" name="s-loc" value="abuja" onchange="applySearchFilters()"> Abuja</label>
+          <label class="sidebar-radio"><input type="radio" name="s-loc" value="port harcourt" onchange="applySearchFilters()"> Port Harcourt</label>
+        </div>
+      </div>
+      <button class="sidebar-btn" onclick="clearSearchFilters()">Clear Filters</button>
+    </div>
+    <div>
+      <div class="listings-header">
+        <p class="listings-count" id="searchCount"><strong>0</strong> results</p>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div class="view-toggle">
+            <button type="button" id="viewGridBtn" class="view-toggle-btn active" onclick="setSearchView('grid')">▦ Grid</button>
+            <button type="button" id="viewMapBtn" class="view-toggle-btn" onclick="setSearchView('map')">🗺 Map</button>
+          </div>
+          <select class="sort-select" onchange="sortSearch(this.value)">
+            <option value="newest">Newest First</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+          </select>
+        </div>
+      </div>
+      <div class="search-results-grid" id="searchGrid"></div>
+      <div id="searchMapWrap" style="display:none;">
+        <div id="searchMap" class="map-box"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ══════════════════════════════════════ HELP PAGE ══════════════════════════════════════ -->
+<div id="page-help" class="site-page">
+  <div class="page-hero">
+    <h1>How Can We <em>Help?</em></h1>
+    <p>24/7 support for buyers, sellers, renters, and landlords across Nigeria.</p>
+  </div>
+  <div class="page-body">
+    <div class="help-search">
+      <input type="text" placeholder="Search for answers…"/>
+      <button class="help-search-btn">Search</button>
+    </div>
+    <div class="page-section-label">Get Support</div>
+    <div class="page-section-title">Contact <em>Our Team</em></div>
+    <div class="page-cards">
+      <div class="page-card"><div class="page-card-icon">💬</div><h3>Live Chat</h3><p>Chat with a support agent right now. Available 24/7 for buyers, sellers, and renters.</p><button class="page-card-btn">Start Chat →</button></div>
+      <div class="page-card"><div class="page-card-icon">📞</div><h3>Call Us</h3><p>Speak directly to our team at <strong>0800-NAIJA-HOMES</strong> (toll free). Mon–Sat, 8am–8pm.</p><button class="page-card-btn">Call Now →</button></div>
+      <div class="page-card"><div class="page-card-icon">📧</div><h3>Email Support</h3><p>Email <strong>hello@nestoraproperties.ng</strong> and expect a response within 4 hours.</p><button class="page-card-btn">Send Email →</button></div>
+      <div class="page-card"><div class="page-card-icon">📚</div><h3>Help Centre</h3><p>Browse 200+ articles covering listings, payments, legal, agents, and account management.</p><button class="page-card-btn">Browse Articles →</button></div>
+      <div class="page-card"><div class="page-card-icon">🎓</div><h3>Buyer's Guide</h3><p>New to buying in Nigeria? Our step-by-step guide covers everything you need to know.</p><button class="page-card-btn" onclick="showPage('buy');return false;">Read Guide →</button></div>
+      <div class="page-card"><div class="page-card-icon">🗓️</div><h3>Book a Consultation</h3><p>Schedule a free 30-minute call with a property expert — no commitment required.</p><button class="page-card-btn" onclick="showPage('signin');return false;">Book Session →</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ SIGN IN PAGE ══════════════════════════════════════ -->
+<div id="page-signin" class="site-page">
+  <div class="signin-wrap">
+    <div class="signin-card">
+      <div class="signin-title">Welcome Back</div>
+      <div class="demo-creds">
+        <strong>Demo accounts</strong> — Admin: admin@nestoraproperties.com / admin123 · Verified Agent: agent@example.com / agent123 · Unverified Agent: newagent@example.com / agent123 · Buyer: buyer@example.com / buyer123
+      </div>
+      <div class="signin-error" id="signinError"></div>
+      <div class="signin-field">
+        <label class="signin-label">Email Address</label>
+        <div class="signin-input-wrap"><input type="email" id="si-email" placeholder="you@example.com"/></div>
+      </div>
+      <div class="signin-field">
+        <label class="signin-label">Password</label>
+        <div class="signin-input-wrap"><input type="password" id="si-password" placeholder="Enter your password"/></div>
+      </div>
+      <button class="btn-signin" onclick="doSignIn()">Sign In</button>
+      <div class="signin-forgot"><a href="#" onclick="return false;">Forgot your password?</a></div>
+      <hr class="signin-divider"/>
+      <p style="text-align:center;font-size:0.82rem;color:var(--ink-3);margin-bottom:12px;">Don't have an account?</p>
+      <button class="btn-signup" onclick="showPage('signup');return false;">Create a Free Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ SIGN UP PAGE ══════════════════════════════════════ -->
+<div id="page-signup" class="site-page">
+  <div class="signin-wrap">
+    <div class="signin-card">
+      <div class="signin-title">Create Your Account</div>
+      <div class="signin-error" id="signupError"></div>
+      <div class="signin-success" id="signupSuccess"></div>
+      <div class="signin-field">
+        <label class="signin-label">I want to join as a...</label>
+        <div class="role-select" id="roleSelect" style="grid-template-columns:1fr 1fr;">
+          <div class="role-opt selected" data-role="buyer" onclick="pickRole('buyer')"><span class="role-ico">🏠</span>Buyer / User</div>
+          <div class="role-opt" data-role="agent" onclick="pickRole('agent')"><span class="role-ico">🤝</span>Agent</div>
+        </div>
+        <p style="font-size:0.74rem;color:var(--ink-3);margin-top:8px;">Want to sell or list your own property? We don't offer self-service seller accounts — <a href="#" onclick="showPage('sell');return false;" style="color:var(--sage);font-weight:600;">contact our team</a> and an agent will handle it for you.</p>
+      </div>
+      <div class="signin-field">
+        <label class="signin-label">Full Name</label>
+        <div class="signin-input-wrap"><input type="text" id="su-name" placeholder="e.g. Chinedu Obi"/></div>
+      </div>
+      <div class="signin-field">
+        <label class="signin-label">Email Address</label>
+        <div class="signin-input-wrap"><input type="email" id="su-email" placeholder="you@example.com"/></div>
+      </div>
+      <div class="signin-field">
+        <label class="signin-label">Phone Number</label>
+        <div class="signin-input-wrap"><input type="text" id="su-phone" placeholder="080XXXXXXXX"/></div>
+      </div>
+      <div class="signin-field" id="su-license-field" style="display:none;">
+        <label class="signin-label">Agent License / CAC Number</label>
+        <div class="signin-input-wrap"><input type="text" id="su-license" placeholder="e.g. REDAN-000123"/></div>
+      </div>
+      <div class="signin-field">
+        <label class="signin-label">Password</label>
+        <div class="signin-input-wrap"><input type="password" id="su-password" placeholder="Create a password"/></div>
+      </div>
+      <button class="btn-signin" onclick="doSignUp()">Create Account</button>
+      <p id="su-agent-note" style="display:none;font-size:0.78rem;color:var(--ink-3);text-align:center;margin-top:-4px;margin-bottom:14px;">Agent accounts are reviewed and verified by our admin team before you can list properties.</p>
+      <hr class="signin-divider"/>
+      <p style="text-align:center;font-size:0.82rem;color:var(--ink-3);margin-bottom:12px;">Already have an account?</p>
+      <button class="btn-signup" onclick="showPage('signin');return false;">Sign In Instead</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════ AGENT DASHBOARD ══════════════════════════════════════ -->
+<div id="page-agent-dash" class="site-page">
+  <div class="page-hero">
+    <h1>Agent <em>Dashboard</em></h1>
+    <p id="agentWelcome">Manage your listings and profile</p>
+  </div>
+  <div class="page-section-wrap" style="max-width:1100px;margin:0 auto;padding:0 24px 80px;">
+    <div id="agentVerifyBanner"></div>
+    <div class="dash-stats" id="agentStats"></div>
+    <div class="dash-tabs">
+      <div class="dash-tab active" onclick="switchDashTab('agent','listings')">My Listings</div>
+      <div class="dash-tab" onclick="switchDashTab('agent','rentals')">Manage Rentals</div>
+      <div class="dash-tab" onclick="switchDashTab('agent','add')">+ Add Listing</div>
+      <div class="dash-tab" onclick="switchDashTab('agent','profile')">My Profile</div>
+    </div>
+    <div class="dash-panel active" id="agent-panel-listings">
+      <div class="dash-table-wrap"><table class="dash-table" id="agentListingsTable"></table></div>
+    </div>
+    <div class="dash-panel" id="agent-panel-rentals">
+      <p style="color:var(--ink-3);font-size:0.88rem;margin-bottom:20px;">Your "For Rent" listings, pulled live from your own portfolio below — no separate rental system, just a focused view of the rentals you manage.</p>
+      <div class="dash-stats" id="agentRentalStats"></div>
+      <div style="margin:20px 0;">
+        <button class="btn-signin" style="width:auto;padding:10px 22px;" onclick="startNewRentalListing()">+ List a New Rental</button>
+      </div>
+      <div class="dash-table-wrap"><table class="dash-table" id="agentRentalsTable"></table></div>
+    </div>
+    <div class="dash-panel" id="agent-panel-add">
+      <div class="dash-form">
+        <div class="dash-form-grid">
+          <div class="signin-field"><label class="signin-label">Title</label><div class="signin-input-wrap"><input type="text" id="aadd-title" placeholder="e.g. 3-Bed Duplex"/></div></div>
+          <div class="signin-field"><label class="signin-label">Location</label><div class="signin-input-wrap"><input type="text" id="aadd-location" placeholder="e.g. Lekki Phase 1, Lagos"/></div></div>
+          <div class="signin-field"><label class="signin-label">Listing Type</label>
+            <div class="signin-input-wrap"><select id="aadd-badge" style="width:100%;border:none;background:transparent;padding:12px 14px;font-family:var(--font-body);font-size:0.9rem;">
+              <option value="For Sale">For Sale</option><option value="For Rent">For Rent</option><option value="Shortlet">Shortlet</option>
+            </select></div>
+          </div>
+          <div class="signin-field"><label class="signin-label">Price (₦)</label><div class="signin-input-wrap"><input type="number" id="aadd-price" placeholder="e.g. 45000000"/></div></div>
+          <div class="signin-field"><label class="signin-label">Bedrooms</label><div class="signin-input-wrap"><input type="number" id="aadd-beds" placeholder="3"/></div></div>
+          <div class="signin-field"><label class="signin-label">Bathrooms</label><div class="signin-input-wrap"><input type="number" id="aadd-baths" placeholder="3"/></div></div>
+          <div class="signin-field"><label class="signin-label">Area</label><div class="signin-input-wrap"><input type="text" id="aadd-area" placeholder="e.g. 210 sqm"/></div></div>
+          <div class="signin-field"><label class="signin-label">Parking Spaces</label><div class="signin-input-wrap"><input type="number" id="aadd-parking" placeholder="2"/></div></div>
+          <div class="signin-field"><label class="signin-label">Latitude</label><div class="signin-input-wrap"><input type="text" id="aadd-lat" placeholder="e.g. 6.4400"/></div></div>
+          <div class="signin-field"><label class="signin-label">Longitude</label><div class="signin-input-wrap"><input type="text" id="aadd-lng" placeholder="e.g. 3.4700"/></div></div>
+          <div class="signin-field" style="grid-column:1/-1;"><label class="signin-label">Photo URL</label><div class="signin-input-wrap"><input type="text" id="aadd-img" placeholder="https://..."/></div></div>
+          <div class="signin-field" style="grid-column:1/-1;"><label class="signin-label">Description</label><textarea id="aadd-desc" placeholder="Describe the property..."></textarea></div>
+        </div>
+        <button class="btn-signin" id="agentSubmitBtn" style="width:auto;padding:13px 26px;" onclick="submitListing()">Submit for Approval</button>
+      </div>
+    </div>
+    <div class="dash-panel" id="agent-panel-profile">
+      <div class="dash-form" style="margin-bottom:24px;">
+        <h3 style="font-family:var(--font-head);margin-bottom:16px;">Edit Profile & Bio</h3>
+        <div class="signin-error" id="profileError"></div>
+        <div class="signin-success" id="profileSuccess"></div>
+        <div class="dash-form-grid">
+          <div class="signin-field"><label class="signin-label">Phone Number</label><div class="signin-input-wrap"><input type="text" id="prof-phone" placeholder="080XXXXXXXX"/></div></div>
+          <div class="signin-field"><label class="signin-label">Specialty</label><div class="signin-input-wrap"><input type="text" id="prof-specialty" placeholder="e.g. Luxury Residential Specialist"/></div></div>
+          <div class="signin-field"><label class="signin-label">Years of Experience</label><div class="signin-input-wrap"><input type="number" id="prof-experience" placeholder="e.g. 5"/></div></div>
+          <div class="signin-field"><label class="signin-label">Photo URL</label><div class="signin-input-wrap"><input type="text" id="prof-photo" placeholder="https://..."/></div></div>
+          <div class="signin-field" style="grid-column:1/-1;"><label class="signin-label">Bio</label><textarea id="prof-bio" placeholder="Tell buyers about yourself..."></textarea></div>
+        </div>
+        <button class="btn-signin" style="width:auto;padding:13px 26px;" onclick="saveAgentProfile()">Save Profile</button>
+      </div>
+      <div class="dash-form">
+        <h3 style="font-family:var(--font-head);margin-bottom:16px;">Identity Verification</h3>
+        <div id="identityStatusBox"></div>
+        <div id="identityForm">
+          <div class="dash-form-grid">
+            <div class="signin-field"><label class="signin-label">Document Type</label>
+              <div class="signin-input-wrap"><select id="id-doctype" style="width:100%;border:none;background:transparent;padding:12px 14px;font-family:var(--font-body);font-size:0.9rem;">
+                <option>National ID</option><option>International Passport</option><option>Driver's License</option><option>Voter's Card</option>
+              </select></div>
+            </div>
+            <div class="signin-field"><label class="signin-label">Document Number</label><div class="signin-input-wrap"><input type="text" id="id-docnumber" placeholder="e.g. NIN-12345678"/></div></div>
+            <div class="signin-field" style="grid-column:1/-1;"><label class="signin-label">Document Photo URL (optional)</label><div class="signin-input-wrap"><input type="text" id="id-docphoto" placeholder="https://..."/></div></div>
+          </div>
+          <button class="btn-signin" style="width:auto;padding:13px 26px;" onclick="submitIdentityVerification()">Submit for Verification</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ FOOTER ══════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Nestora <em>Properties</em></div>
+        <p class="footer-desc">Nigeria's most trusted platform for buying, selling and renting residential and commercial properties across all 36 states.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <a onclick="showPage('buy');return false;">Buy a Home</a>
+        <a onclick="showPage('rent');return false;">Rent a Home</a>
+        <a onclick="showPage('rent');return false;">Shortlets</a>
+        <a onclick="showPage('buy');return false;">New Builds</a>
+        <a onclick="showPage('buy');return false;">Land & Plots</a>
+      </div>
+      <div class="footer-col">
+        <h4>Cities</h4>
+        <a onclick="filterAndGoHome('lagos')">Lagos</a>
+        <a onclick="filterAndGoHome('abuja')">Abuja</a>
+        <a onclick="showPage('home');return false;">Port Harcourt</a>
+        <a onclick="showPage('home');return false;">Ibadan</a>
+        <a onclick="showPage('home');return false;">Enugu</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a onclick="showPage('help');return false;">About Us</a>
+        <a onclick="showPage('agents');return false;">Agents</a>
+        <a onclick="showPage('help');return false;">Blog</a>
+        <a onclick="showPage('help');return false;">Careers</a>
+        <a onclick="showPage('help');return false;">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Nestora Properties Ltd · All rights reserved · Built by Mirabledev</span>
+      <span>Privacy · Terms · Cookies</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════ MODAL ══════════════════════════════════════ -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <div class="modal-gallery">
+      <img id="modalImg" src="" alt="Property"/>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-price" id="modalPrice"></div>
+      <div id="modalVerifiedBadge"></div>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-addr" id="modalAddr">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span></span>
+      </div>
+      <div class="modal-features" id="modalFeatures"></div>
+      <div id="modalMap" class="map-box-sm"></div>
+      <div class="agent-card-small" id="modalAgentCard" style="cursor:pointer;"></div>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="modal-tags" id="modalTags"></div>
+      <div class="modal-cta">
+        <button class="btn-primary">📞 Call Agent</button>
+        <div class="btn-row">
+          <button class="btn-secondary">💬 Message</button>
+          <button class="btn-secondary">🗓 Schedule Visit</button>
+        </div>
+        <button class="btn-mortgage-sm" onclick="openMortgageFromModal()">🧮 Calculate Mortgage</button>
+        <button class="btn-mortgage-sm" style="color:#a83232;" onclick="reportListing()">🚩 Report as Scam / Suspicious</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ SCRIPT ══════════════════════════════════════ -->
+<script>
+// ── PROPERTY DATA ──
+// ══════════════════════════════════════════════════════════
+// API LAYER — every piece of data below comes from the real
+// Nestora Properties backend (see /src on the server) instead
+// of an in-memory array. The token is kept in localStorage so
+// a session survives a page refresh.
+// ══════════════════════════════════════════════════════════
+const API_BASE = '/api';
+let authToken = localStorage.getItem('nestora_token') || null;
+let currentUser = null;
+
+async function apiFetch(path, opts) {
+  opts = opts || {};
+  var headers = Object.assign({}, opts.headers || {});
+  if (opts.body && !(opts.body instanceof FormData)) headers['Content-Type'] = 'application/json';
+  if (authToken) headers['Authorization'] = 'Bearer ' + authToken;
+  var res = await fetch(API_BASE + path, Object.assign({}, opts, { headers: headers }));
+  var data = null;
+  try { data = await res.json(); } catch (e) { /* no body */ }
+  if (!res.ok) throw new Error((data && data.error) || ('Request failed (' + res.status + ')'));
+  return data;
+}
+
+let cachedProperties = []; // approved listings only, fetched from the server
+
+function publicProperties() {
+  return cachedProperties;
+}
+
+async function loadPublicProperties() {
+  try {
+    var data = await apiFetch('/properties');
+    cachedProperties = data.properties;
+  } catch (err) {
+    console.error('Failed to load properties:', err.message);
+    cachedProperties = [];
+  }
+}
+
+let currentFilter = 'all';
+let currentSort = 'newest';
+let searchQuery = '';
+let filteredProperties = [];
+
+// ── PAGE ROUTING ──
+var DASH_ROLES = { 'agent-dash': 'agent' };
+function toggleMobileNav() {
+  document.querySelector('nav').classList.toggle('mobile-nav-open');
+}
+
+function showPage(name, skipHistory) {
+  document.querySelector('nav').classList.remove('mobile-nav-open');
+  if (DASH_ROLES[name]) {
+    if (!currentUser) { alert('Please sign in to access that dashboard.'); name = 'signin'; }
+    else if (currentUser.role !== DASH_ROLES[name]) { alert('You do not have access to that dashboard.'); name = 'home'; }
+  }
+  document.querySelectorAll('.site-page').forEach(function(p) { p.classList.remove('active'); });
+  var target = document.getElementById('page-' + name);
+  if (!target) { name = 'home'; target = document.getElementById('page-home'); }
+  target.classList.add('active');
+  document.querySelectorAll('.nav-left a').forEach(function(a) {
+    a.classList.remove('active');
+    if (a.getAttribute('onclick') && a.getAttribute('onclick').indexOf("'" + name + "'") !== -1) {
+      a.classList.add('active');
+    }
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (name === 'mortgage') { calcMortgage2(); }
+  if (name === 'search') { renderSearchGrid(); }
+  if (name === 'agent-dash') renderAgentDashboard();
+  if (name === 'agents') renderAgentsDirectory();
+
+  // Browser/phone back button support: push a real history entry per page,
+  // unless we're here *because of* a back/forward navigation (skipHistory).
+  if (!skipHistory && (!history.state || history.state.page !== name)) {
+    history.pushState({ page: name }, '', '#' + name);
+  }
+  return false;
+}
+
+// Handles the browser/phone back and forward buttons (and swipe-back gestures)
+window.addEventListener('popstate', function(e) {
+  var name = (e.state && e.state.page) || 'home';
+  showPage(name, true);
+});
+
+// ── FILTER LISTINGS ──
+function filterListings(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-chip').forEach(function(c) { c.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  applyFiltersAndRender();
+}
+
+function applyFiltersAndRender() {
+  filteredProperties = publicProperties().filter(function(p) {
+    var q = searchQuery.toLowerCase();
+    var matchQ = !q || p.title.toLowerCase().includes(q) || p.location.toLowerCase().includes(q) || p.city.toLowerCase().includes(q);
+    var matchF = currentFilter === 'all' ||
+      (currentFilter === 'sale' && p.badge === 'For Sale') ||
+      (currentFilter === 'rent' && p.badge === 'For Rent') ||
+      (currentFilter === 'shortlet' && p.badge === 'Shortlet') ||
+      (currentFilter === 'apartment' && p.type === 'apartment') ||
+      (currentFilter === 'duplex' && (p.type === 'duplex' || p.type === 'terrace')) ||
+      (currentFilter === 'abuja' && p.city === 'abuja') ||
+      (currentFilter === 'lagos' && p.city === 'lagos');
+    return matchQ && matchF;
+  });
+  sortProps(filteredProperties, currentSort);
+  renderListings();
+}
+
+function sortProps(arr, mode) {
+  if (mode === 'price-asc') arr.sort(function(a,b){ return a.price - b.price; });
+  else if (mode === 'price-desc') arr.sort(function(a,b){ return b.price - a.price; });
+  else arr.sort(function(a,b){ return a.id - b.id; });
+}
+
+function sortListings(val) {
+  currentSort = val;
+  applyFiltersAndRender();
+}
+
+function liveSearch(val) {
+  searchQuery = val;
+  applyFiltersAndRender();
+}
+
+function doSearch() {
+  var q = document.getElementById('heroSearch').value;
+  document.getElementById('searchPageDesc').textContent = q ? 'Results for "' + q + '"' : 'Showing all available properties';
+  searchQuery = q;
+  applySearchFilters();
+  showPage('search');
+}
+
+function filterAndGoHome(filter) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-chip').forEach(function(c) {
+    c.classList.remove('active');
+    if (c.dataset.filter === filter) c.classList.add('active');
+  });
+  applyFiltersAndRender();
+  showPage('home');
+}
+
+// Takes a "Browse Rentals" / "Browse Shortlets" style CTA straight to the real
+// search results page, pre-filtered to that listing type (type = 'rent' or 'shortlet').
+function goToTypeResults(type) {
+  var radio = document.querySelector('input[name="s-type"][value="' + type + '"]');
+  if (radio) radio.checked = true;
+  searchQuery = '';
+  var labels = { rent: 'for-rent properties', shortlet: 'shortlet properties' };
+  document.getElementById('searchPageDesc').textContent = 'Showing all ' + (labels[type] || 'properties');
+  applySearchFilters();
+  showPage('search');
+}
+
+function setView(mode, btn) {
+  document.querySelectorAll('.view-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  var grid = document.getElementById('listingsGrid');
+  if (mode === 'list') {
+    grid.style.gridTemplateColumns = '1fr';
+  } else {
+    grid.style.gridTemplateColumns = '';
+  }
+}
+
+// ── RENDER CARDS ──
+function makeCardHTML(p) {
+  var badgeClass = p.badge === 'For Rent' ? 'rent' : p.badge === 'Shortlet' ? 'shortlet' : '';
+  return '<div class="card-img">' +
+    '<img src="' + p.img + '" alt="' + p.title + '" loading="lazy"/>' +
+    '<span class="card-badge ' + badgeClass + '">' + p.badge + '</span>' +
+    '<button class="card-save" onclick="event.stopPropagation();toggleSave(this)">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
+    '</button>' +
+  '</div>' +
+  '<div class="card-body">' +
+    '<div class="card-price">' + p.priceStr + '</div>' +
+    '<div class="card-title">' + p.title + '</div>' +
+    '<div class="card-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' + p.location + '</div>' +
+    '<div class="card-meta">' +
+      '<div class="meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>' + p.beds + ' Beds</div>' +
+      '<div class="meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/></svg>' + p.baths + ' Baths</div>' +
+      '<div class="meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>' + p.area + '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderListings() {
+  var grid = document.getElementById('listingsGrid');
+  var count = document.getElementById('listingsCount');
+  grid.innerHTML = '';
+  if (filteredProperties.length === 0) {
+    grid.innerHTML = '<div class="no-results"><p>No properties match your filters.</p></div>';
+    count.innerHTML = '<strong>0</strong> properties';
+    return;
+  }
+  count.innerHTML = '<strong>' + filteredProperties.length + '</strong> properties';
+  filteredProperties.forEach(function(p, i) {
+    var card = document.createElement('div');
+    card.className = 'card';
+    card.style.animationDelay = (i * 0.05) + 's';
+    card.innerHTML = makeCardHTML(p);
+    card.addEventListener('click', function(){ openModal(p); });
+    grid.appendChild(card);
+  });
+}
+
+function renderFeatured() {
+  var grid = document.getElementById('featuredGrid');
+  grid.innerHTML = '';
+  publicProperties().slice(0, 3).forEach(function(p, i) {
+    var badgeClass = p.badge === 'For Rent' ? 'rent' : p.badge === 'Shortlet' ? 'shortlet' : '';
+    var card = document.createElement('div');
+    card.className = 'feat-card';
+    card.style.animationDelay = (i * 0.1) + 's';
+    card.innerHTML =
+      '<div class="feat-card-img"><img src="' + p.img + '" alt="' + p.title + '" loading="lazy"/>' +
+      '<span class="feat-card-badge">' + p.badge + '</span></div>' +
+      '<div class="feat-card-body">' +
+        '<div class="feat-card-price">' + p.priceStr + '</div>' +
+        '<div class="feat-card-title">' + p.title + '</div>' +
+        '<div class="feat-card-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' + p.location + '</div>' +
+        '<div class="feat-card-meta">' +
+          '<div class="feat-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>' + p.beds + ' Beds</div>' +
+          '<div class="feat-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/></svg>' + p.baths + ' Baths</div>' +
+          '<div class="feat-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>' + p.area + '</div>' +
+        '</div>' +
+      '</div>';
+    card.addEventListener('click', function(){ openModal(p); });
+    grid.appendChild(card);
+  });
+}
+
+// ── SEARCH PAGE FILTERS ──
+var searchResults = [];
+
+function applySearchFilters() {
+  var type = document.querySelector('input[name="s-type"]:checked').value;
+  var minP = parseFloat(document.getElementById('s-min').value) || 0;
+  var maxP = parseFloat(document.getElementById('s-max').value) || Infinity;
+  var beds = parseInt(document.querySelector('input[name="s-beds"]:checked').value) || 0;
+  var loc  = document.querySelector('input[name="s-loc"]:checked').value;
+  searchResults = publicProperties().filter(function(p){
+    var matchT = !type || (type === 'sale' && p.badge === 'For Sale') || (type === 'rent' && p.badge === 'For Rent') || (type === 'shortlet' && p.badge === 'Shortlet');
+    var matchP = p.price >= minP && p.price <= maxP;
+    var matchB = p.beds >= beds;
+    var matchL = !loc || p.city === loc || p.location.toLowerCase().includes(loc);
+    var q = searchQuery.toLowerCase();
+    var matchQ = !q || p.title.toLowerCase().includes(q) || p.location.toLowerCase().includes(q) || p.city.toLowerCase().includes(q);
+    return matchT && matchP && matchB && matchL && matchQ;
+  });
+  renderSearchGrid();
+}
+
+function clearSearchFilters() {
+  document.querySelector('input[name="s-type"][value=""]').checked = true;
+  document.querySelector('input[name="s-beds"][value="0"]').checked = true;
+  document.querySelector('input[name="s-loc"][value=""]').checked = true;
+  document.getElementById('s-min').value = '';
+  document.getElementById('s-max').value = '';
+  searchQuery = '';
+  searchResults = publicProperties();
+  renderSearchGrid();
+}
+
+function sortSearch(val) {
+  sortProps(searchResults, val);
+  renderSearchGrid();
+}
+
+function renderSearchGrid() {
+  if (searchResults.length === 0 && publicProperties().length > 0 && !document.getElementById('s-min').value && !document.getElementById('s-max').value) {
+    searchResults = publicProperties();
+  }
+  var grid = document.getElementById('searchGrid');
+  var count = document.getElementById('searchCount');
+  grid.innerHTML = '';
+  count.innerHTML = '<strong>' + searchResults.length + '</strong> results';
+  if (searchResults.length === 0) {
+    grid.innerHTML = '<div class="no-results" style="grid-column:1/-1"><p>No properties found. Try adjusting your filters.</p></div>';
+    return;
+  }
+  searchResults.forEach(function(p, i) {
+    var card = document.createElement('div');
+    card.className = 'feat-card';
+    card.style.animationDelay = (i * 0.04) + 's';
+    card.innerHTML =
+      '<div class="feat-card-img"><img src="' + p.img + '" alt="' + p.title + '" loading="lazy"/>' +
+      '<span class="feat-card-badge">' + p.badge + '</span></div>' +
+      '<div class="feat-card-body">' +
+        '<div class="feat-card-price">' + p.priceStr + '</div>' +
+        '<div class="feat-card-title">' + p.title + '</div>' +
+        '<div class="feat-card-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' + p.location + '</div>' +
+        '<div class="feat-card-meta">' +
+          '<div class="feat-meta-item">' + p.beds + ' Beds</div>' +
+          '<div class="feat-meta-item">' + p.baths + ' Baths</div>' +
+          '<div class="feat-meta-item">' + p.area + '</div>' +
+        '</div>' +
+      '</div>';
+    card.addEventListener('click', function(){ openModal(p); });
+    grid.appendChild(card);
+  });
+  if (searchViewMode === 'map') renderSearchMap();
+}
+
+// ── MAP VIEW (SEARCH PAGE) ──
+var searchViewMode = 'grid';
+var _searchLeafletMap = null;
+
+function setSearchView(mode) {
+  searchViewMode = mode;
+  document.getElementById('viewGridBtn').classList.toggle('active', mode === 'grid');
+  document.getElementById('viewMapBtn').classList.toggle('active', mode === 'map');
+  document.getElementById('searchGrid').style.display = mode === 'grid' ? '' : 'none';
+  document.getElementById('searchMapWrap').style.display = mode === 'map' ? '' : 'none';
+  if (mode === 'map') renderSearchMap();
+}
+
+function renderSearchMap() {
+  if (typeof L === 'undefined') return;
+  var withCoords = searchResults.filter(function(p){ return p.lat && p.lng; });
+  if (!_searchLeafletMap) {
+    _searchLeafletMap = L.map('searchMap');
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors', maxZoom: 19
+    }).addTo(_searchLeafletMap);
+  }
+  if (_searchLeafletMap._markersLayer) _searchLeafletMap.removeLayer(_searchLeafletMap._markersLayer);
+  var markersLayer = L.layerGroup();
+  var bounds = [];
+  withCoords.forEach(function(p){
+    var marker = L.marker([p.lat, p.lng]);
+    marker.bindPopup(
+      '<div class="map-popup-title">' + p.title + '</div>' +
+      '<div class="map-popup-price">' + p.priceStr + '</div>' +
+      '<div>' + p.location + '</div>' +
+      '<div class="map-popup-btn" onclick="closeAllPopupsAndOpen(' + p.id + ')">View Details →</div>'
+    );
+    markersLayer.addLayer(marker);
+    bounds.push([p.lat, p.lng]);
+  });
+  markersLayer.addTo(_searchLeafletMap);
+  _searchLeafletMap._markersLayer = markersLayer;
+  if (bounds.length) {
+    _searchLeafletMap.fitBounds(bounds, { padding: [30,30], maxZoom: 13 });
+  } else {
+    _searchLeafletMap.setView([9.0820, 8.6753], 6); // Nigeria centre fallback
+  }
+  setTimeout(function(){ _searchLeafletMap.invalidateSize(); }, 150);
+}
+
+async function closeAllPopupsAndOpen(id) {
+  var p = cachedProperties.find(function(pr){ return pr.id === id; });
+  if (p) { openModal(p); return; }
+  // Not in the public cache (e.g. pending/flagged listing viewed from a dashboard) — fetch directly
+  try {
+    var data = await apiFetch('/properties/' + id);
+    openModal(data.property);
+  } catch (err) {
+    alert('Could not load that property: ' + err.message);
+  }
+}
+
+// ── MODAL ──
+var _modalMapInstance = null;
+function openModal(p) {
+  window._currentModalProperty = p;
+  document.getElementById('modalImg').src = p.img;
+  document.getElementById('modalTitle').textContent = p.title;
+  document.getElementById('modalAddr').querySelector('span').textContent = p.location;
+  document.getElementById('modalPrice').innerHTML = p.priceStr + ' <span>' + p.badge + '</span>';
+  document.getElementById('modalVerifiedBadge').innerHTML = p.verifiedProperty ?
+    '<div class="badge-row"><span class="trust-badge verified-property">✅ Verified Property</span></div>' : '';
+  document.getElementById('modalDesc').textContent = p.desc;
+  document.getElementById('modalFeatures').innerHTML =
+    '<div class="feat-item"><div class="feat-val">' + p.beds + '</div><div class="feat-lbl">Bedrooms</div></div>' +
+    '<div class="feat-item"><div class="feat-val">' + p.baths + '</div><div class="feat-lbl">Bathrooms</div></div>' +
+    '<div class="feat-item"><div class="feat-val">' + p.area + '</div><div class="feat-lbl">Area</div></div>' +
+    '<div class="feat-item"><div class="feat-val">' + p.parking + '</div><div class="feat-lbl">Parking</div></div>';
+  document.getElementById('modalTags').innerHTML = (p.tags || []).map(function(t){ return '<span class="tag">' + t + '</span>'; }).join('');
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  window._modalPrice = p.price;
+  setTimeout(function(){ renderModalMap(p); }, 100);
+  renderModalAgentCard(p);
+}
+
+async function renderModalAgentCard(p) {
+  var el = document.getElementById('modalAgentCard');
+  el.innerHTML = '<div class="agent-avatar-sm">…</div><div><div class="agent-name-sm">Loading agent…</div></div>';
+  el.onclick = null;
+  if (p.ownerType !== 'agent' || !p.ownerId) { el.innerHTML = ''; return; }
+  try {
+    var data = await apiFetch('/agents/' + p.ownerId);
+    var a = data.agent;
+    var badges = '';
+    if (a.verified) badges += '<span class="trust-badge verified-agent" style="font-size:0.6rem;">Verified Agent</span> ';
+    if (a.idVerification && a.idVerification.status === 'verified') badges += '<span class="trust-badge id-verified" style="font-size:0.6rem;">ID Verified</span>';
+    el.innerHTML =
+      '<div class="agent-avatar-sm">' + initials(a.name) + '</div>' +
+      '<div>' +
+        '<div class="agent-name-sm">' + a.name + '</div>' +
+        '<div class="agent-role-sm">' + (a.specialty || 'Property Consultant') + '</div>' +
+        '<div class="agent-rating-sm">' + starString(a.ratingAvg) + ' ' + a.ratingAvg + ' (' + a.ratingCount + ' reviews) &nbsp;' + badges + '</div>' +
+      '</div>';
+    el.onclick = function(){ closeModal(); viewAgentProfile(a.id); };
+  } catch (err) {
+    el.innerHTML = '';
+  }
+}
+
+function starString(avg) {
+  var full = Math.round(avg || 0);
+  return '★★★★★☆☆☆☆☆'.slice(5 - full, 10 - full);
+}
+
+function renderModalMap(p) {
+  var el = document.getElementById('modalMap');
+  if (typeof L === 'undefined' || !el || !p.lat || !p.lng) { if(el) el.innerHTML = ''; return; }
+  el.innerHTML = '';
+  _modalMapInstance = L.map(el, { zoomControl:false, dragging:true, scrollWheelZoom:false }).setView([p.lat, p.lng], 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(_modalMapInstance);
+  L.marker([p.lat, p.lng]).addTo(_modalMapInstance).bindPopup(p.title);
+  setTimeout(function(){ _modalMapInstance.invalidateSize(); }, 120);
+}
+
+async function reportListing() {
+  var p = window._currentModalProperty;
+  if (!p) return;
+  if (!currentUser) { alert('Please sign in to report a listing.'); return; }
+  if (!confirm('Report "' + p.title + '" as a scam or suspicious listing? It will be hidden and sent to our admin team for review.')) return;
+  try {
+    await apiFetch('/properties/' + p.id + '/report', { method: 'POST', body: JSON.stringify({ reason: 'Reported by user via listing page' }) });
+    await loadPublicProperties();
+    applyFiltersAndRender();
+    closeModal();
+    alert('Thanks — this listing has been flagged and removed from public view pending admin review.');
+  } catch (err) {
+    alert('Could not submit report: ' + err.message);
+  }
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  if (_modalMapInstance) { _modalMapInstance.remove(); _modalMapInstance = null; }
+}
+
+document.getElementById('modalOverlay').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+
+function toggleSave(btn) {
+  var svg = btn.querySelector('svg');
+  var saved = svg.getAttribute('fill') !== 'none';
+  svg.setAttribute('fill', saved ? 'none' : '#e53935');
+  svg.setAttribute('stroke', saved ? 'currentColor' : '#e53935');
+}
+
+// ── MORTGAGE CALCULATOR (home) ──
+function fmtN(n) {
+  if (n >= 1e9) return '₦' + (n/1e9).toFixed(2) + 'B';
+  if (n >= 1e6) return '₦' + (n/1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return '₦' + (n/1e3).toFixed(0) + 'K';
+  return '₦' + n.toFixed(0);
+}
+
+function calcMortgageCore(price, down, rate, tenor) {
+  var principal = Math.max(0, price - down);
+  var monthlyRate = rate / 100 / 12;
+  var n = tenor * 12;
+  var monthly = monthlyRate > 0 ? principal * (monthlyRate * Math.pow(1+monthlyRate,n)) / (Math.pow(1+monthlyRate,n)-1) : principal/n;
+  var total = monthly * n;
+  return { monthly: monthly, principal: principal, interest: total - principal, total: total + down };
+}
+
+function calcMortgage() {
+  var price  = parseFloat(document.getElementById('mc-price').value)  || 0;
+  var down   = parseFloat(document.getElementById('mc-down').value)   || 0;
+  var rate   = parseFloat(document.getElementById('mc-rate').value)   || 0;
+  var tenor  = parseFloat(document.getElementById('mc-tenor').value)  || 1;
+  var r = calcMortgageCore(price, down, rate, tenor);
+  document.getElementById('mc-monthly').textContent = fmtN(r.monthly);
+  document.getElementById('mc-principal').textContent = fmtN(r.principal);
+  document.getElementById('mc-total-interest').textContent = fmtN(r.interest);
+  document.getElementById('mc-total').textContent = fmtN(r.total);
+  document.getElementById('mc-down-pct').textContent = price > 0 ? Math.round((down/price)*100) + '%' : '0%';
+  document.getElementById('mc-price-slider').value = price;
+  document.getElementById('mc-down-slider').max = price;
+  document.getElementById('mc-down-slider').value = down;
+  document.getElementById('mc-rate-slider').value = rate;
+  document.getElementById('mc-tenor-slider').value = tenor;
+  drawDonut('mc-donut', r.principal, r.interest, down);
+}
+
+function syncSlider(field) {
+  var map = { price:'mc-price', down:'mc-down', rate:'mc-rate', tenor:'mc-tenor' };
+  document.getElementById(map[field]).value = document.getElementById('mc-'+field+'-slider').value;
+  calcMortgage();
+}
+
+// ── MORTGAGE CALCULATOR (mortgage page) ──
+function calcMortgage2() {
+  var price  = parseFloat(document.getElementById('mc2-price').value)  || 0;
+  var down   = parseFloat(document.getElementById('mc2-down').value)   || 0;
+  var rate   = parseFloat(document.getElementById('mc2-rate').value)   || 0;
+  var tenor  = parseFloat(document.getElementById('mc2-tenor').value)  || 1;
+  var r = calcMortgageCore(price, down, rate, tenor);
+  document.getElementById('mc2-monthly').textContent = fmtN(r.monthly);
+  document.getElementById('mc2-principal').textContent = fmtN(r.principal);
+  document.getElementById('mc2-interest').textContent = fmtN(r.interest);
+  document.getElementById('mc2-total').textContent = fmtN(r.total);
+  document.getElementById('mc2-pct').textContent = price > 0 ? Math.round((down/price)*100) + '%' : '0%';
+  document.getElementById('mc2-price-s').value = price;
+  document.getElementById('mc2-down-s').max = price;
+  document.getElementById('mc2-down-s').value = down;
+  document.getElementById('mc2-rate-s').value = rate;
+  document.getElementById('mc2-tenor-s').value = tenor;
+}
+
+function syncSlider2(field) {
+  var map = { price:'mc2-price', down:'mc2-down', rate:'mc2-rate', tenor:'mc2-tenor' };
+  document.getElementById(map[field]).value = document.getElementById('mc2-'+field+'-s').value;
+  calcMortgage2();
+}
+
+// ── DONUT CHART ──
+function drawDonut(canvasId, principal, interest, down) {
+  var canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var total = principal + interest + down;
+  if (total <= 0) return;
+  var slices = [{val:principal,color:'#1c5c3a'},{val:interest,color:'#c8871f'},{val:down,color:'#e8f2ec'}];
+  ctx.clearRect(0, 0, 90, 90);
+  var start = -Math.PI/2;
+  slices.forEach(function(s){
+    var sweep = (s.val/total)*2*Math.PI;
+    ctx.beginPath(); ctx.moveTo(45,45); ctx.arc(45,45,38,start,start+sweep); ctx.closePath();
+    ctx.fillStyle=s.color; ctx.fill(); start+=sweep;
+  });
+  ctx.beginPath(); ctx.arc(45,45,24,0,2*Math.PI);
+  ctx.fillStyle='#fff'; ctx.fill();
+}
+
+// ── OPEN MORTGAGE FROM MODAL ──
+function openMortgageFromModal() {
+  if (window._modalPrice && window._modalPrice > 1000) {
+    document.getElementById('mc-price').value = window._modalPrice;
+  }
+  closeModal();
+  showPage('home');
+  setTimeout(function(){
+    var el = document.getElementById('mortgage-section');
+    if (el) el.scrollIntoView({behavior:'smooth'});
+    calcMortgage();
+  }, 400);
+}
+
+// ── STAGGER ANIMATION HELPER ──
+function staggerCards(selector) {
+  document.querySelectorAll(selector).forEach(function(el, i) {
+    el.style.animationDelay = (i * 0.06) + 's';
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   AUTH · AGENT DASHBOARD · ADMIN DASHBOARD
+   All calls below hit the real Nestora Properties backend.
+   There is no self-service seller account — people who want
+   to sell are directed to the "Sell" page's contact form,
+   which creates a lead for our team to follow up on.
+══════════════════════════════════════════════════════════ */
+
+function pickRole(role) {
+  document.querySelectorAll('.role-opt').forEach(function(el){ el.classList.toggle('selected', el.dataset.role === role); });
+  document.getElementById('su-license-field').style.display = role === 'agent' ? 'block' : 'none';
+  document.getElementById('su-agent-note').style.display = role === 'agent' ? 'block' : 'none';
+  window._signupRole = role;
+}
+window._signupRole = 'buyer';
+
+function showAuthError(id, msg) {
+  var el = document.getElementById(id);
+  el.textContent = msg; el.classList.add('show');
+}
+function hideAuthError(id) { document.getElementById(id).classList.remove('show'); }
+
+async function doSignUp() {
+  hideAuthError('signupError');
+  document.getElementById('signupSuccess').classList.remove('show');
+  var name = document.getElementById('su-name').value.trim();
+  var email = document.getElementById('su-email').value.trim().toLowerCase();
+  var phone = document.getElementById('su-phone').value.trim();
+  var password = document.getElementById('su-password').value;
+  var role = window._signupRole || 'buyer';
+  var license = document.getElementById('su-license').value.trim();
+
+  if (!name || !email || !password) { showAuthError('signupError', 'Please fill in your name, email, and password.'); return; }
+  if (role === 'agent' && !license) { showAuthError('signupError', 'Please provide your agent license / CAC number.'); return; }
+
+  try {
+    var data = await apiFetch('/auth/signup', {
+      method: 'POST',
+      body: JSON.stringify({ name: name, email: email, password: password, phone: phone, role: role, license: license }),
+    });
+    document.getElementById('signupSuccess').textContent = data.message;
+    document.getElementById('signupSuccess').classList.add('show');
+    ['su-name','su-email','su-phone','su-license','su-password'].forEach(function(id){ document.getElementById(id).value=''; });
+  } catch (err) {
+    showAuthError('signupError', err.message);
+  }
+}
+
+async function doSignIn() {
+  hideAuthError('signinError');
+  var email = document.getElementById('si-email').value.trim().toLowerCase();
+  var password = document.getElementById('si-password').value;
+  if (!email || !password) { showAuthError('signinError', 'Please enter your email and password.'); return; }
+
+  try {
+    var data = await apiFetch('/auth/login', { method: 'POST', body: JSON.stringify({ email: email, password: password }) });
+    authToken = data.token;
+    currentUser = data.user;
+    localStorage.setItem('nestora_token', authToken);
+    document.getElementById('si-email').value = '';
+    document.getElementById('si-password').value = '';
+    renderNavAuth();
+    if (currentUser.role === 'admin') { window.location.href = 'admin.html'; return; }
+    else if (currentUser.role === 'agent') showPage('agent-dash');
+    else showPage('home');
+  } catch (err) {
+    showAuthError('signinError', err.message);
+  }
+}
+
+function logout() {
+  authToken = null;
+  currentUser = null;
+  localStorage.removeItem('nestora_token');
+  renderNavAuth();
+  showPage('home');
+}
+
+async function restoreSession() {
+  if (!authToken) return;
+  try {
+    var data = await apiFetch('/auth/me');
+    currentUser = data.user;
+  } catch (err) {
+    authToken = null;
+    localStorage.removeItem('nestora_token');
+  }
+  renderNavAuth();
+}
+
+function toggleUserMenu() {
+  document.getElementById('userDropdown').classList.toggle('open');
+}
+document.addEventListener('click', function(e){
+  var menu = document.getElementById('userDropdown');
+  var chip = document.getElementById('userChip');
+  if (menu && menu.classList.contains('open') && chip && !chip.contains(e.target) && !menu.contains(e.target)) {
+    menu.classList.remove('open');
+  }
+});
+
+function initials(name) {
+  return name.split(' ').map(function(n){ return n[0]; }).join('').slice(0,2).toUpperCase();
+}
+
+function renderNavAuth() {
+  var nav = document.getElementById('navRight');
+  if (!currentUser) {
+    nav.innerHTML =
+      '<li><a href="#" onclick="showPage(\'help\');return false;">Help</a></li>' +
+      '<li><a href="#" onclick="showPage(\'signin\');return false;">Sign In</a></li>' +
+      '<li><a href="#" class="nav-btn" onclick="showPage(\'signup\');return false;">Sign Up</a></li>';
+    return;
+  }
+  var dashLink = currentUser.role === 'admin' ? '<a href="admin.html">Admin Dashboard</a><hr/>' :
+    currentUser.role === 'agent' ? '<a onclick="showPage(\'agent-dash\');return false;">Agent Dashboard</a><hr/>' : '';
+  nav.innerHTML =
+    '<li><a href="#" onclick="showPage(\'help\');return false;">Help</a></li>' +
+    '<li class="user-menu">' +
+      '<div class="user-chip" id="userChip" onclick="toggleUserMenu()">' +
+        '<div class="user-chip-avatar">' + initials(currentUser.name) + '</div>' +
+        '<span>' + currentUser.name.split(' ')[0] + '</span>' +
+      '</div>' +
+      '<div class="user-dropdown" id="userDropdown">' +
+        dashLink +
+        '<a onclick="logout();return false;">Log Out</a>' +
+      '</div>' +
+    '</li>';
+}
+
+/* ── AGENT DASHBOARD ── */
+function switchDashTab(scope, tab) {
+  var wrap = 'page-agent-dash';
+  var container = document.getElementById(wrap);
+  container.querySelectorAll('.dash-tab').forEach(function(t){ t.classList.remove('active'); });
+  container.querySelectorAll('.dash-panel').forEach(function(p){ p.classList.remove('active'); });
+  var tabs = Array.prototype.slice.call(container.querySelectorAll('.dash-tab'));
+  var panelIds = ['listings','rentals','add','profile'];
+  var idx = panelIds.indexOf(tab);
+  if (tabs[idx]) tabs[idx].classList.add('active');
+  var panel = document.getElementById(scope + '-panel-' + tab);
+  if (panel) panel.classList.add('active');
+}
+
+function statCard(num, label) {
+  return '<div class="dash-stat-card"><div class="dash-stat-num">' + num + '</div><div class="dash-stat-lbl">' + label + '</div></div>';
+}
+
+async function renderAgentDashboard() {
+  if (!currentUser) return;
+  try {
+    var meData = await apiFetch('/auth/me');
+    currentUser = meData.user;
+  } catch (err) { /* keep existing currentUser if this fails */ }
+
+  document.getElementById('agentWelcome').textContent = 'Welcome back, ' + currentUser.name;
+  var banner = document.getElementById('agentVerifyBanner');
+  if (!currentUser.verified) {
+    banner.innerHTML = '<div class="signin-error show" style="margin-bottom:24px;">⏳ Your agent account is pending verification by our admin team. You can prepare listings below, but they will not go live until you are verified and the listing is approved.</div>';
+  } else {
+    banner.innerHTML = '<div class="signin-success show" style="margin-bottom:24px;">✅ Verified Agent — your submitted listings will be reviewed and published by our admin team.</div>';
+  }
+
+  // Populate profile form
+  document.getElementById('prof-phone').value = currentUser.phone || '';
+  document.getElementById('prof-specialty').value = currentUser.specialty || '';
+  document.getElementById('prof-experience').value = currentUser.yearsExperience || '';
+  document.getElementById('prof-photo').value = currentUser.photo || '';
+  document.getElementById('prof-bio').value = currentUser.bio || '';
+
+  // Populate identity verification status
+  var idv = currentUser.idVerification || { status: 'none' };
+  var idBox = document.getElementById('identityStatusBox');
+  var idForm = document.getElementById('identityForm');
+  if (idv.status === 'verified') {
+    idBox.innerHTML = '<div class="id-status-box verified">✅ Your identity has been verified by Nestora Properties.</div>';
+    idForm.style.display = 'none';
+  } else if (idv.status === 'pending') {
+    idBox.innerHTML = '<div class="id-status-box pending">⏳ Your ' + idv.documentType + ' (' + idv.documentNumber + ') was submitted on ' + new Date(idv.submittedAt).toLocaleDateString() + ' and is awaiting admin review.</div>';
+    idForm.style.display = 'none';
+  } else if (idv.status === 'rejected') {
+    idBox.innerHTML = '<div class="id-status-box rejected">❌ Your last identity submission was rejected. Please check your details and resubmit.</div>';
+    idForm.style.display = 'block';
+  } else {
+    idBox.innerHTML = '<div class="id-status-box none">You have not submitted identity verification yet. Verified agents earn an "ID Verified" badge that shows to buyers.</div>';
+    idForm.style.display = 'block';
+  }
+
+  var mine = [];
+  try {
+    var data = await apiFetch('/properties/mine');
+    mine = data.properties;
+  } catch (err) {
+    document.getElementById('agentListingsTable').innerHTML = '<tr><td class="dash-empty">Could not load your listings: ' + err.message + '</td></tr>';
+    return;
+  }
+
+  document.getElementById('agentStats').innerHTML =
+    statCard(mine.length, 'Total Listings') +
+    statCard(mine.filter(function(p){return p.status==='approved';}).length, 'Live') +
+    statCard(mine.filter(function(p){return p.status==='pending';}).length, 'Pending Review') +
+    statCard(currentUser.verified ? 'Yes' : 'No', 'Verified');
+
+  var rows = mine.map(function(p){
+    return '<tr><td><img src="' + p.img + '"/></td><td>' + p.title + '<br><span style="color:var(--ink-3);font-size:0.78rem;">' + p.location + '</span></td>' +
+      '<td>' + p.priceStr + '</td>' +
+      '<td><span class="status-badge status-' + p.status + '">' + p.status + '</span>' + (p.verifiedProperty ? ' <span class="trust-badge verified-property" style="font-size:0.6rem;">Verified</span>' : '') + '</td>' +
+      '<td><button class="dash-btn dash-btn-ghost" onclick="closeAllPopupsAndOpen(' + p.id + ')">View</button>' +
+      '<button class="dash-btn dash-btn-reject" onclick="ownerDeleteListing(' + p.id + ')">Delete</button></td></tr>';
+  }).join('');
+  document.getElementById('agentListingsTable').innerHTML =
+    '<tr><th>Photo</th><th>Property</th><th>Price</th><th>Status</th><th>Actions</th></tr>' +
+    (rows || '<tr><td colspan="5" class="dash-empty">No listings yet. Use "+ Add Listing" to submit your first property — including shortlets.</td></tr>');
+
+  // ── Manage Rentals tab: just the "For Rent" slice of the agent's own listings ──
+  var rentals = mine.filter(function(p){ return p.badge === 'For Rent'; });
+  var liveRentals = rentals.filter(function(p){ return p.status === 'approved'; });
+  var totalAnnualRent = liveRentals.reduce(function(sum, p){ return sum + (p.price || 0); }, 0);
+
+  document.getElementById('agentRentalStats').innerHTML =
+    statCard(rentals.length, 'Total Rentals') +
+    statCard(liveRentals.length, 'Live Rentals') +
+    statCard(rentals.filter(function(p){return p.status==='pending';}).length, 'Pending Review') +
+    statCard(fmtN(totalAnnualRent), 'Total Listed Rent/yr');
+
+  var rentalRows = rentals.map(function(p){
+    return '<tr><td><img src="' + p.img + '"/></td><td>' + p.title + '<br><span style="color:var(--ink-3);font-size:0.78rem;">' + p.location + '</span></td>' +
+      '<td>' + p.priceStr + '</td>' +
+      '<td><span class="status-badge status-' + p.status + '">' + p.status + '</span>' + (p.verifiedProperty ? ' <span class="trust-badge verified-property" style="font-size:0.6rem;">Verified</span>' : '') + '</td>' +
+      '<td><button class="dash-btn dash-btn-ghost" onclick="closeAllPopupsAndOpen(' + p.id + ')">View</button>' +
+      '<button class="dash-btn dash-btn-reject" onclick="ownerDeleteListing(' + p.id + ')">Delete</button></td></tr>';
+  }).join('');
+  document.getElementById('agentRentalsTable').innerHTML =
+    '<tr><th>Photo</th><th>Property</th><th>Price</th><th>Status</th><th>Actions</th></tr>' +
+    (rentalRows || '<tr><td colspan="5" class="dash-empty">No rental listings yet. Use "+ List a New Rental" to submit one for approval.</td></tr>');
+}
+
+// Jumps to the Add Listing tab with the listing type pre-set to "For Rent"
+function startNewRentalListing() {
+  switchDashTab('agent', 'add');
+  var badgeSelect = document.getElementById('aadd-badge');
+  if (badgeSelect) badgeSelect.value = 'For Rent';
+}
+
+async function saveAgentProfile() {
+  var errEl = document.getElementById('profileError');
+  var okEl = document.getElementById('profileSuccess');
+  errEl.classList.remove('show'); okEl.classList.remove('show');
+  try {
+    var data = await apiFetch('/auth/profile', {
+      method: 'PATCH',
+      body: JSON.stringify({
+        phone: document.getElementById('prof-phone').value.trim(),
+        specialty: document.getElementById('prof-specialty').value.trim(),
+        yearsExperience: document.getElementById('prof-experience').value,
+        photo: document.getElementById('prof-photo').value.trim(),
+        bio: document.getElementById('prof-bio').value.trim(),
+      }),
+    });
+    currentUser = data.user;
+    okEl.textContent = 'Profile updated successfully.';
+    okEl.classList.add('show');
+  } catch (err) {
+    errEl.textContent = err.message;
+    errEl.classList.add('show');
+  }
+}
+
+async function submitIdentityVerification() {
+  var docType = document.getElementById('id-doctype').value;
+  var docNumber = document.getElementById('id-docnumber').value.trim();
+  var docPhoto = document.getElementById('id-docphoto').value.trim();
+  if (!docNumber) { alert('Please enter your document number.'); return; }
+  try {
+    var data = await apiFetch('/auth/identity-verification', {
+      method: 'POST',
+      body: JSON.stringify({ documentType: docType, documentNumber: docNumber, documentPhotoUrl: docPhoto }),
+    });
+    currentUser = data.user;
+    alert(data.message);
+    renderAgentDashboard();
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+async function ownerDeleteListing(id) {
+  if (!confirm('Delete this listing permanently?')) return;
+  try {
+    await apiFetch('/properties/' + id, { method: 'DELETE' });
+    await loadPublicProperties();
+    applyFiltersAndRender();
+    if (currentUser.role === 'agent') renderAgentDashboard();
+  } catch (err) {
+    alert('Could not delete listing: ' + err.message);
+  }
+}
+
+function readListingForm(prefix) {
+  return {
+    title: document.getElementById(prefix + '-title').value.trim() || 'Untitled Property',
+    location: document.getElementById(prefix + '-location').value.trim() || 'Nigeria',
+    badge: document.getElementById(prefix + '-badge').value,
+    price: parseFloat(document.getElementById(prefix + '-price').value) || 0,
+    beds: parseInt(document.getElementById(prefix + '-beds').value) || 0,
+    baths: parseInt(document.getElementById(prefix + '-baths').value) || 0,
+    area: document.getElementById(prefix + '-area').value.trim() || '—',
+    parking: parseInt(document.getElementById(prefix + '-parking').value) || 0,
+    lat: parseFloat(document.getElementById(prefix + '-lat').value) || null,
+    lng: parseFloat(document.getElementById(prefix + '-lng').value) || null,
+    img: document.getElementById(prefix + '-img').value.trim() || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80',
+    desc: document.getElementById(prefix + '-desc').value.trim() || 'No description provided.',
+    tags: [],
+    type: 'apartment',
+    city: 'lagos',
+  };
+}
+
+async function submitListing() {
+  var prefix = 'aadd';
+  var payload = readListingForm(prefix);
+  try {
+    await apiFetch('/properties', { method: 'POST', body: JSON.stringify(payload) });
+    ['title','location','price','beds','baths','area','parking','lat','lng','img','desc'].forEach(function(f){
+      var el = document.getElementById(prefix + '-' + f);
+      if (el) el.value = '';
+    });
+    alert('Listing submitted! It will appear on Nestora Properties once approved by our admin team.');
+    switchDashTab('agent','listings');
+    renderAgentDashboard();
+  } catch (err) {
+    alert('Could not submit listing: ' + err.message);
+  }
+}
+
+/* ── SELL / CONTACT LEAD FORM (replaces self-service seller signup) ── */
+async function submitSellLead() {
+  var errEl = document.getElementById('leadError');
+  var okEl = document.getElementById('leadSuccess');
+  errEl.classList.remove('show'); okEl.classList.remove('show');
+
+  var payload = {
+    name: document.getElementById('lead-name').value.trim(),
+    email: document.getElementById('lead-email').value.trim(),
+    phone: document.getElementById('lead-phone').value.trim(),
+    location: document.getElementById('lead-location').value.trim(),
+    message: document.getElementById('lead-message').value.trim(),
+  };
+  if (!payload.name || !payload.email || !payload.phone) {
+    errEl.textContent = 'Please fill in your name, email, and phone number.';
+    errEl.classList.add('show');
+    return;
+  }
+  try {
+    var data = await apiFetch('/leads', { method: 'POST', body: JSON.stringify(payload) });
+    okEl.textContent = data.message;
+    okEl.classList.add('show');
+    ['lead-name','lead-email','lead-phone','lead-location','lead-message'].forEach(function(id){ document.getElementById(id).value = ''; });
+  } catch (err) {
+    errEl.textContent = err.message;
+    errEl.classList.add('show');
+  }
+}
+
+async function renderAgentsDirectory() {
+  var grid = document.getElementById('agentsGrid');
+  grid.innerHTML = '<p style="color:var(--ink-3);">Loading agents…</p>';
+  try {
+    var data = await apiFetch('/agents');
+    if (data.agents.length === 0) {
+      grid.innerHTML = '<p style="color:var(--ink-3);">No agents to show yet.</p>';
+      return;
+    }
+    grid.innerHTML = data.agents.map(function(a){
+      var badges = '';
+      if (a.verified) badges += '<span class="trust-badge verified-agent">Verified Agent</span>';
+      if (a.idVerification && a.idVerification.status === 'verified') badges += '<span class="trust-badge id-verified">ID Verified</span>';
+      else if (a.idVerification && a.idVerification.status === 'pending') badges += '<span class="trust-badge id-pending">ID Pending</span>';
+      return '<div class="agent-card-full">' +
+        '<div class="agent-avatar-lg">' + initials(a.name) + '</div>' +
+        '<div class="agent-name">' + a.name + '</div>' +
+        '<div class="agent-role">' + (a.specialty || 'Property Consultant') + '</div>' +
+        '<div class="badge-row">' + badges + '</div>' +
+        '<div class="agent-rating"><span class="stars-static">' + starString(a.ratingAvg) + '</span> ' + a.ratingAvg + ' (' + a.ratingCount + ' reviews)</div>' +
+        '<div class="agent-location">' + (a.yearsExperience || 0) + ' yrs experience</div>' +
+        '<button class="page-card-btn" onclick="viewAgentProfile(' + a.id + ');return false;">View Profile →</button>' +
+      '</div>';
+    }).join('');
+  } catch (err) {
+    grid.innerHTML = '<p style="color:var(--ink-3);">Could not load agents: ' + err.message + '</p>';
+  }
+}
+
+async function viewAgentProfile(id) {
+  showPage('agent-profile');
+  var headerEl = document.getElementById('agentProfileHeader');
+  var listingsEl = document.getElementById('agentProfileListings');
+  var reviewsEl = document.getElementById('agentProfileReviews');
+  headerEl.innerHTML = '<p style="text-align:center;color:var(--ink-3);">Loading agent profile…</p>';
+  listingsEl.innerHTML = ''; reviewsEl.innerHTML = '';
+
+  try {
+    var data = await apiFetch('/agents/' + id);
+    var a = data.agent;
+    window._currentAgentProfile = a;
+
+    var badges = '';
+    if (a.verified) badges += '<span class="trust-badge verified-agent">Verified Agent</span>';
+    if (a.idVerification && a.idVerification.status === 'verified') badges += '<span class="trust-badge id-verified">ID Verified</span>';
+    else if (a.idVerification && a.idVerification.status === 'pending') badges += '<span class="trust-badge id-pending">ID Pending</span>';
+
+    headerEl.innerHTML =
+      '<div class="agent-profile-header">' +
+        '<div class="agent-profile-avatar">' + initials(a.name) + '</div>' +
+        '<div class="agent-profile-name">' + a.name + '</div>' +
+        '<div class="agent-profile-role">' + (a.specialty || 'Property Consultant') + ' · ' + (a.yearsExperience || 0) + ' yrs experience</div>' +
+        '<div class="badge-row">' + badges + '</div>' +
+        '<div class="agent-rating" style="margin-bottom:14px;"><span class="stars-static">' + starString(a.ratingAvg) + '</span> ' + a.ratingAvg + ' (' + a.ratingCount + ' reviews)</div>' +
+        '<p class="agent-profile-bio">' + (a.bio || 'This agent has not added a bio yet.') + '</p>' +
+        '<div class="agent-profile-contact">' +
+          '<button class="btn-primary" style="width:auto;padding:10px 20px;" onclick="alert(\'Call ' + a.phone + '\')">📞 ' + (a.phone || 'No phone on file') + '</button>' +
+          '<button class="btn-secondary" style="width:auto;padding:10px 20px;" onclick="alert(\'Email ' + a.email + '\')">✉️ Email</button>' +
+        '</div>' +
+      '</div>';
+
+    if (data.listings.length) {
+      listingsEl.innerHTML = '<div class="agent-section-title">Live Listings (' + data.listings.length + ')</div><div class="search-results-grid" id="agentProfileGrid"></div>';
+      var lgrid = document.getElementById('agentProfileGrid');
+      data.listings.forEach(function(p){
+        var card = document.createElement('div');
+        card.className = 'feat-card';
+        card.innerHTML =
+          '<div class="feat-card-img"><img src="' + p.img + '" alt="' + p.title + '" loading="lazy"/><span class="feat-card-badge">' + p.badge + '</span></div>' +
+          '<div class="feat-card-body"><div class="feat-card-price">' + p.priceStr + '</div><div class="feat-card-title">' + p.title + (p.verifiedProperty ? ' <span class="trust-badge verified-property" style="font-size:0.58rem;">Verified</span>' : '') + '</div>' +
+          '<div class="feat-card-loc">' + p.location + '</div></div>';
+        card.addEventListener('click', function(){ openModal(p); });
+        lgrid.appendChild(card);
+      });
+    } else {
+      listingsEl.innerHTML = '<div class="agent-section-title">Live Listings</div><p style="color:var(--ink-3);">No live listings from this agent yet.</p>';
+    }
+
+    var reviewFormHtml = '';
+    if (currentUser && currentUser.id !== a.id) {
+      reviewFormHtml =
+        '<div class="review-form">' +
+          '<div class="signin-label" style="margin-bottom:8px;">Leave a Review</div>' +
+          '<div class="stars-input" id="reviewStars">' +
+            [1,2,3,4,5].map(function(n){ return '<span data-val="' + n + '" onclick="setReviewStars(' + n + ')">★</span>'; }).join('') +
+          '</div>' +
+          '<textarea id="reviewComment" placeholder="How was your experience with this agent?" style="width:100%;border:1px solid var(--border);border-radius:10px;background:var(--paper);font-family:var(--font-body);font-size:0.88rem;padding:12px 14px;min-height:70px;margin:10px 0;"></textarea>' +
+          '<button class="btn-signin" style="width:auto;padding:11px 22px;" onclick="submitAgentReview(' + a.id + ')">Submit Review</button>' +
+        '</div>';
+    } else if (!currentUser) {
+      reviewFormHtml = '<p style="color:var(--ink-3);margin-bottom:16px;"><a href="#" onclick="showPage(\'signin\');return false;" style="color:var(--sage);font-weight:600;">Sign in</a> to leave a review for this agent.</p>';
+    }
+
+    var reviewsHtml = data.reviews.length ? data.reviews.map(function(r){
+      return '<div class="review-card">' +
+        '<div class="review-head"><span class="review-name">' + r.reviewerName + '</span><span class="review-date">' + new Date(r.createdAt).toLocaleDateString() + '</span></div>' +
+        '<div class="stars-static">' + starString(r.rating) + '</div>' +
+        (r.comment ? '<div class="review-comment">' + r.comment + '</div>' : '') +
+      '</div>';
+    }).join('') : '<p style="color:var(--ink-3);">No reviews yet.</p>';
+
+    reviewsEl.innerHTML = '<div class="agent-section-title">Reviews</div>' + reviewFormHtml + reviewsHtml;
+  } catch (err) {
+    headerEl.innerHTML = '<p style="text-align:center;color:var(--ink-3);">Could not load agent profile: ' + err.message + '</p>';
+  }
+}
+
+window._selectedStars = 0;
+function setReviewStars(n) {
+  window._selectedStars = n;
+  document.querySelectorAll('#reviewStars span').forEach(function(s){
+    s.classList.toggle('filled', Number(s.dataset.val) <= n);
+  });
+}
+
+async function submitAgentReview(agentId) {
+  if (!window._selectedStars) { alert('Please select a star rating.'); return; }
+  try {
+    await apiFetch('/agents/' + agentId + '/reviews', {
+      method: 'POST',
+      body: JSON.stringify({ rating: window._selectedStars, comment: document.getElementById('reviewComment').value.trim() }),
+    });
+    window._selectedStars = 0;
+    viewAgentProfile(agentId);
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+
+// ── INIT ──
+(async function init() {
+  await restoreSession();
+  await loadPublicProperties();
+  searchResults = publicProperties();
+  applyFiltersAndRender();
+  renderFeatured();
+  calcMortgage();
+
+  // Establish the base history entry so the back button has somewhere sane to
+  // land, honoring a page hash if one was already in the URL (e.g. a shared link).
+  var initialPage = (window.location.hash || '#home').slice(1);
+  if (!document.getElementById('page-' + initialPage)) initialPage = 'home';
+  history.replaceState({ page: initialPage }, '', '#' + initialPage);
+  if (initialPage !== 'home') showPage(initialPage, true);
+
+  // Deep link support: ?property=ID opens that listing's modal directly.
+  // Used by the admin dashboard's "Preview" buttons (admin.html).
+  var propId = new URLSearchParams(window.location.search).get('property');
+  if (propId) {
+    try {
+      var data = await apiFetch('/properties/' + propId);
+      openModal(data.property);
+    } catch (err) {
+      console.error('Could not load property for preview:', err.message);
+    }
+  }
+})();
+</script>
+</body>
+</html>
