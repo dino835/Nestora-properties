@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/reference-redesign.css">
 </head>
 <body>
 
@@ -138,7 +139,7 @@
       <div class="map-pin" style="top:72%;left:40%">₦5.5M/yr</div>
       <div class="map-pin" style="top:24%;left:74%">₦120M</div>
       <div class="map-overlay-card">
-        <img class="map-overlay-img" src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=200&q=80" alt="Property"/>
+        <img class="map-overlay-img" src="/assets/placeholder.svg" alt="placeholder"/>
         <div class="map-overlay-info">
           <div class="map-overlay-price">₦45,000,000</div>
           <div class="map-overlay-title">3-Bed Terrace, Lekki Phase 1</div>
@@ -173,23 +174,23 @@
     </div>
     <div class="nh-grid">
       <div class="nh-card">
-        <img src="https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=600&q=80" alt="Lekki"/>
+        <img src="/assets/placeholder.svg" alt="placeholder"/>
         <div class="nh-overlay"><div class="nh-name">Lekki</div><div class="nh-count">2,340 listings</div></div>
       </div>
       <div class="nh-card">
-        <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&q=80" alt="Ikoyi"/>
+        <img src="/assets/placeholder.svg" alt="placeholder"/>
         <div class="nh-overlay"><div class="nh-name">Ikoyi</div><div class="nh-count">890 listings</div></div>
       </div>
       <div class="nh-card">
-        <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&q=80" alt="Victoria Island"/>
+        <img src="/assets/placeholder.svg" alt="placeholder"/>
         <div class="nh-overlay"><div class="nh-name">Victoria Island</div><div class="nh-count">1,120 listings</div></div>
       </div>
       <div class="nh-card">
-        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&q=80" alt="Maitama"/>
+        <img src="/assets/placeholder.svg" alt="placeholder"/>
         <div class="nh-overlay"><div class="nh-name">Maitama, Abuja</div><div class="nh-count">670 listings</div></div>
       </div>
       <div class="nh-card">
-        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&q=80" alt="GRA"/>
+        <img src="/assets/placeholder.svg" alt="placeholder"/>
         <div class="nh-overlay"><div class="nh-name">GRA, Port Harcourt</div><div class="nh-count">440 listings</div></div>
       </div>
     </div>
@@ -752,7 +753,7 @@
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal" id="modal">
     <div class="modal-gallery">
-      <img id="modalImg" src="" alt="Property"/>
+      <img id="modalImg" src="/assets/placeholder.svg" alt="placeholder"/>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
@@ -956,7 +957,7 @@ function setView(mode, btn) {
 function makeCardHTML(p) {
   var badgeClass = p.badge === 'For Rent' ? 'rent' : p.badge === 'Shortlet' ? 'shortlet' : '';
   return '<div class="card-img">' +
-    '<img src="' + p.img + '" alt="' + p.title + '" loading="lazy"/>' +
+    '<img src="/assets/placeholder.svg" alt="placeholder" loading="lazy"/>' +
     '<span class="card-badge ' + badgeClass + '">' + p.badge + '</span>' +
     '<button class="card-save" onclick="event.stopPropagation();toggleSave(this)">' +
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
@@ -1003,7 +1004,7 @@ function renderFeatured() {
     card.className = 'feat-card';
     card.style.animationDelay = (i * 0.1) + 's';
     card.innerHTML =
-      '<div class="feat-card-img"><img src="' + p.img + '" alt="' + p.title + '" loading="lazy"/>' +
+      '<div class="feat-card-img"><img src="/assets/placeholder.svg" alt="placeholder" loading="lazy"/>' +
       '<span class="feat-card-badge">' + p.badge + '</span></div>' +
       '<div class="feat-card-body">' +
         '<div class="feat-card-price">' + p.priceStr + '</div>' +
@@ -1074,7 +1075,7 @@ function renderSearchGrid() {
     card.className = 'feat-card';
     card.style.animationDelay = (i * 0.04) + 's';
     card.innerHTML =
-      '<div class="feat-card-img"><img src="' + p.img + '" alt="' + p.title + '" loading="lazy"/>' +
+      '<div class="feat-card-img"><img src="/assets/placeholder.svg" alt="placeholder" loading="lazy"/>' +
       '<span class="feat-card-badge">' + p.badge + '</span></div>' +
       '<div class="feat-card-body">' +
         '<div class="feat-card-price">' + p.priceStr + '</div>' +
@@ -1154,7 +1155,7 @@ async function closeAllPopupsAndOpen(id) {
 var _modalMapInstance = null;
 function openModal(p) {
   window._currentModalProperty = p;
-  document.getElementById('modalImg').src = p.img;
+  document.getElementById('modalImg').src = '/assets/placeholder.svg';
   document.getElementById('modalTitle').textContent = p.title;
   document.getElementById('modalAddr').querySelector('span').textContent = p.location;
   document.getElementById('modalPrice').innerHTML = p.priceStr + ' <span>' + p.badge + '</span>';
@@ -1555,7 +1556,7 @@ async function renderAgentDashboard() {
     statCard(currentUser.verified ? 'Yes' : 'No', 'Verified');
 
   var rows = mine.map(function(p){
-    return '<tr><td><img src="' + p.img + '"/></td><td>' + p.title + '<br><span style="color:var(--ink-3);font-size:0.78rem;">' + p.location + '</span></td>' +
+    return '<tr><td><img src="/assets/placeholder.svg" alt="placeholder"/></td><td>' + p.title + '<br><span style="color:var(--ink-3);font-size:0.78rem;">' + p.location + '</span></td>' +
       '<td>' + p.priceStr + '</td>' +
       '<td><span class="status-badge status-' + p.status + '">' + p.status + '</span>' + (p.verifiedProperty ? ' <span class="trust-badge verified-property" style="font-size:0.6rem;">Verified</span>' : '') + '</td>' +
       '<td><button class="dash-btn dash-btn-ghost" onclick="closeAllPopupsAndOpen(' + p.id + ')">View</button>' +
@@ -1577,7 +1578,7 @@ async function renderAgentDashboard() {
     statCard(fmtN(totalAnnualRent), 'Total Listed Rent/yr');
 
   var rentalRows = rentals.map(function(p){
-    return '<tr><td><img src="' + p.img + '"/></td><td>' + p.title + '<br><span style="color:var(--ink-3);font-size:0.78rem;">' + p.location + '</span></td>' +
+    return '<tr><td><img src="/assets/placeholder.svg" alt="placeholder"/></td><td>' + p.title + '<br><span style="color:var(--ink-3);font-size:0.78rem;">' + p.location + '</span></td>' +
       '<td>' + p.priceStr + '</td>' +
       '<td><span class="status-badge status-' + p.status + '">' + p.status + '</span>' + (p.verifiedProperty ? ' <span class="trust-badge verified-property" style="font-size:0.6rem;">Verified</span>' : '') + '</td>' +
       '<td><button class="dash-btn dash-btn-ghost" onclick="closeAllPopupsAndOpen(' + p.id + ')">View</button>' +
@@ -1661,7 +1662,7 @@ function readListingForm(prefix) {
     parking: parseInt(document.getElementById(prefix + '-parking').value) || 0,
     lat: parseFloat(document.getElementById(prefix + '-lat').value) || null,
     lng: parseFloat(document.getElementById(prefix + '-lng').value) || null,
-    img: document.getElementById(prefix + '-img').value.trim() || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80',
+    img: document.getElementById(prefix + '-img').value.trim() || '/assets/placeholder.svg',
     desc: document.getElementById(prefix + '-desc').value.trim() || 'No description provided.',
     tags: [],
     type: 'apartment',
@@ -1783,7 +1784,7 @@ async function viewAgentProfile(id) {
         var card = document.createElement('div');
         card.className = 'feat-card';
         card.innerHTML =
-          '<div class="feat-card-img"><img src="' + p.img + '" alt="' + p.title + '" loading="lazy"/><span class="feat-card-badge">' + p.badge + '</span></div>' +
+          '<div class="feat-card-img"><img src="/assets/placeholder.svg" alt="placeholder" loading="lazy"/><span class="feat-card-badge">' + p.badge + '</span></div>' +
           '<div class="feat-card-body"><div class="feat-card-price">' + p.priceStr + '</div><div class="feat-card-title">' + p.title + (p.verifiedProperty ? ' <span class="trust-badge verified-property" style="font-size:0.58rem;">Verified</span>' : '') + '</div>' +
           '<div class="feat-card-loc">' + p.location + '</div></div>';
         card.addEventListener('click', function(){ openModal(p); });
@@ -1874,5 +1875,6 @@ async function submitAgentReview(agentId) {
   }
 })();
 </script>
+<script src="js/scroll-reveal.js"></script>
 </body>
 </html>
