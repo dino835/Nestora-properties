@@ -602,11 +602,60 @@ nav.mobile-nav-open .hamburger span:nth-child(3) { transform: translateY(-5.5px)
 }
 .see-all:hover { color: var(--ink); }
 
-.featured-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+.feat-carousel {
+  position: relative;
+  padding: 4px 58px 46px;
 }
+.feat-track {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.2,0.8,0.2,1);
+  cursor: grab;
+}
+.feat-track:active { cursor: grabbing; }
+.feat-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+}
+.feat-slide .feat-card { width: min(460px, 100%); cursor: pointer; }
+
+.feat-nav {
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  border: none;
+  background: var(--white);
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: all var(--transition);
+  z-index: 5;
+}
+.feat-nav svg { width: 17px; height: 17px; }
+.feat-nav-prev { left: 0; }
+.feat-nav-next { right: 0; }
+.feat-nav:hover { transform: translateY(-50%) scale(1.08); }
+.feat-nav:active { transform: translateY(-50%) scale(0.94); }
+
+.feat-dots {
+  position: absolute;
+  left: 0; right: 0; bottom: 6px;
+  display: flex; justify-content: center; align-items: center;
+  gap: 8px;
+}
+.feat-dot {
+  width: 8px; height: 8px;
+  border: none; padding: 0;
+  border-radius: 50%;
+  background: var(--border-dark);
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.2,0.8,0.2,1);
+}
+.feat-dot.active { width: 24px; border-radius: 5px; background: var(--sage); }
 
 .feat-card {
   background: var(--white);
@@ -699,8 +748,9 @@ nav.mobile-nav-open .hamburger span:nth-child(3) { transform: translateY(-5.5px)
 
 .nh-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 14px;
+  justify-content: center;
 }
 .nh-card {
   border-radius: var(--radius-lg);
@@ -1255,7 +1305,28 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 .trust-badge.verified-agent { background:#e5f4ea; color:#1c5c3a; }
 .trust-badge.id-verified { background:#e6eefc; color:#2a4d9e; }
 .trust-badge.id-pending { background:#fdf3e3; color:#c8871f; }
-.trust-badge.verified-property { background:#fdf0e3; color:#a85f1c; }
+.trust-badge.verified-property { background:#e5f4ea; color:#1c5c3a; }
+
+/* ── VERIFIED PROPERTY PILL (shown on card thumbnails, admin-controlled) ── */
+.verified-pill {
+  position: absolute;
+  bottom: 10px; left: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-family: var(--font-body);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #fff;
+  background: linear-gradient(135deg, var(--sage-mid), #106b3f);
+  z-index: 2;
+}
+.verified-pill svg { width: 10px; height: 10px; flex-shrink: 0; stroke-width: 3; }
+.feat-card-img .verified-pill { bottom: 12px; left: 12px; }
 .stars-static { color: var(--gold); font-size:0.85rem; letter-spacing:1px; }
 .stars-input { font-size:1.6rem; cursor:pointer; letter-spacing:4px; color:var(--border-dark); }
 .stars-input span.filled { color: var(--gold); }
@@ -1691,7 +1762,6 @@ footer {
 @media(max-width:1000px) {
   .main-content { grid-template-columns: 1fr; }
   .map-panel { display: none; }
-  .featured-grid { grid-template-columns: 1fr 1fr; }
   .nh-grid { grid-template-columns: 1fr 1fr; }
   .nh-card:first-child { grid-row: auto; }
   .mortgage-inner { grid-template-columns: 1fr; gap: 32px; }
@@ -1736,7 +1806,11 @@ footer {
   }
   .modal { grid-template-columns: 1fr; }
   .modal-gallery { min-height: 220px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
-  .featured-grid { grid-template-columns: 1fr; }
+  .feat-carousel { padding: 4px 4px 42px; }
+  .feat-nav { width: 36px; height: 36px; }
+  .feat-nav svg { width: 14px; height: 14px; }
+  .feat-nav-prev { left: 2px; }
+  .feat-nav-next { right: 2px; }
   .listings-grid { grid-template-columns: 1fr; }
   .page-cards { grid-template-columns: 1fr; }
   .steps-grid { grid-template-columns: 1fr; }
