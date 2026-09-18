@@ -749,8 +749,10 @@ nav.mobile-nav-open .hamburger span:nth-child(3) { transform: translateY(-5.5px)
 .nh-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-template-areas:
+    "hero b c"
+    "hero d e";
   gap: 14px;
-  justify-content: center;
 }
 .nh-card {
   border-radius: var(--radius-lg);
@@ -760,7 +762,11 @@ nav.mobile-nav-open .hamburger span:nth-child(3) { transform: translateY(-5.5px)
   cursor: pointer;
   background: #222;
 }
-.nh-card:first-child { grid-row: span 2; aspect-ratio: auto; }
+.nh-card:nth-child(1) { grid-area: hero; aspect-ratio: auto; }
+.nh-card:nth-child(2) { grid-area: b; }
+.nh-card:nth-child(3) { grid-area: c; }
+.nh-card:nth-child(4) { grid-area: d; }
+.nh-card:nth-child(5) { grid-area: e; }
 .nh-card img {
   width: 100%; height: 100%;
   object-fit: cover;
@@ -1307,26 +1313,38 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 .trust-badge.id-pending { background:#fdf3e3; color:#c8871f; }
 .trust-badge.verified-property { background:#e5f4ea; color:#1c5c3a; }
 
-/* ── VERIFIED PROPERTY PILL (shown on card thumbnails, admin-controlled) ── */
+/* ── VERIFIED CHECKMARK (admin-controlled), styled like a social-platform
+   verified seal: solid circle, white check, no label text ── */
 .verified-pill {
   position: absolute;
   bottom: 10px; left: 10px;
+  width: 22px; height: 22px;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border-radius: 50px;
-  font-family: var(--font-body);
-  font-size: 0.64rem;
-  font-weight: 800;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
-  color: #fff;
-  background: linear-gradient(135deg, var(--sage-mid), #106b3f);
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3ee079, #12a34c);
   z-index: 2;
 }
-.verified-pill svg { width: 10px; height: 10px; flex-shrink: 0; stroke-width: 3; }
+.verified-pill svg { width: 12px; height: 12px; stroke: #fff; stroke-width: 3.4; flex-shrink: 0; }
 .feat-card-img .verified-pill { bottom: 12px; left: 12px; }
+
+/* Inline variant for use next to a title (modal header, listing rows) —
+   same seal, sized to sit in text flow rather than pinned to a corner. */
+.verified-check-inline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3ee079, #12a34c);
+  vertical-align: middle;
+  margin-left: 5px;
+  flex-shrink: 0;
+}
+.verified-check-inline svg { width: 9px; height: 9px; stroke: #fff; stroke-width: 3.6; }
+.verified-check-inline.verified-check-lg { width: 26px; height: 26px; margin-left: 0; }
+.verified-check-inline.verified-check-lg svg { width: 14px; height: 14px; }
 .stars-static { color: var(--gold); font-size:0.85rem; letter-spacing:1px; }
 .stars-input { font-size:1.6rem; cursor:pointer; letter-spacing:4px; color:var(--border-dark); }
 .stars-input span.filled { color: var(--gold); }
@@ -1762,8 +1780,8 @@ footer {
 @media(max-width:1000px) {
   .main-content { grid-template-columns: 1fr; }
   .map-panel { display: none; }
-  .nh-grid { grid-template-columns: 1fr 1fr; }
-  .nh-card:first-child { grid-row: auto; }
+  .nh-grid { grid-template-columns: 1fr 1fr; grid-template-areas: none; }
+  .nh-card:nth-child(1) { grid-column: 1 / -1; aspect-ratio: 3/4; }
   .mortgage-inner { grid-template-columns: 1fr; gap: 32px; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .page-cards { grid-template-columns: 1fr 1fr; }

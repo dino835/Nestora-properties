@@ -974,12 +974,20 @@ function propertyImage(p, offset) {
 }
 
 // ── RENDER CARDS ──
-// Admin-controlled green "verified" pill, shown on any property thumbnail
-// where verifiedProperty is true (set via the admin dashboard).
+// Admin-controlled verified checkmark, shown on any property thumbnail
+// where verifiedProperty is true (set via the admin dashboard). Icon only —
+// no label text, like a platform verification seal.
 function verifiedBadgeHTML(p) {
   return p.verifiedProperty ?
     '<span class="verified-pill" title="Verified by Nestora Properties">' +
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Verified' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' +
+    '</span>' : '';
+}
+// Same seal, sized to sit inline next to a title instead of pinned to a corner.
+function verifiedCheckInlineHTML(p) {
+  return p.verifiedProperty ?
+    '<span class="verified-check-inline" title="Verified by Nestora Properties">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4"><polyline points="20 6 9 17 4 12"/></svg>' +
     '</span>' : '';
 }
 
@@ -1104,7 +1112,7 @@ function featPrev() { goToFeatSlide(featIndex - 1); }
 
 function startFeatAutoplay() {
   stopFeatAutoplay();
-  if (featItemsCount <= 1 || featPrefersReducedMotion || document.hidden) return;
+  if (featItemsCount <= 1 || document.hidden) return;
   featAutoplayTimer = setInterval(featNext, 5000);
 }
 function stopFeatAutoplay() {
@@ -1306,7 +1314,7 @@ function openModal(p) {
   document.getElementById('modalAddr').querySelector('span').textContent = p.location;
   document.getElementById('modalPrice').innerHTML = p.priceStr + ' <span>' + p.badge + '</span>';
   document.getElementById('modalVerifiedBadge').innerHTML = p.verifiedProperty ?
-    '<div class="badge-row"><span class="trust-badge verified-property">✅ Verified Property</span></div>' : '';
+    '<div class="badge-row">' + verifiedCheckInlineHTML(p).replace('verified-check-inline', 'verified-check-inline verified-check-lg') + '</div>' : '';
   document.getElementById('modalDesc').textContent = p.desc;
   document.getElementById('modalFeatures').innerHTML =
     '<div class="feat-item"><div class="feat-val">' + p.beds + '</div><div class="feat-lbl">Bedrooms</div></div>' +
@@ -1931,7 +1939,7 @@ async function viewAgentProfile(id) {
         card.className = 'feat-card';
         card.innerHTML =
           '<div class="feat-card-img"><img src="' + propertyImage(p) + '" alt="' + p.title + '" loading="lazy"/><span class="feat-card-badge">' + p.badge + '</span></div>' +
-          '<div class="feat-card-body"><div class="feat-card-price">' + p.priceStr + '</div><div class="feat-card-title">' + p.title + (p.verifiedProperty ? ' <span class="trust-badge verified-property" style="font-size:0.58rem;">Verified</span>' : '') + '</div>' +
+          '<div class="feat-card-body"><div class="feat-card-price">' + p.priceStr + '</div><div class="feat-card-title">' + p.title + verifiedCheckInlineHTML(p) + '</div>' +
           '<div class="feat-card-loc">' + p.location + '</div></div>';
         card.addEventListener('click', function(){ openModal(p); });
         lgrid.appendChild(card);
