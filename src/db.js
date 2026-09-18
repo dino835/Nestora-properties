@@ -15,7 +15,13 @@
 const fs = require('fs');
 const path = require('path');
 
-const DATA_DIR = path.join(__dirname, '..', 'data');
+// Vercel's serverless runtime ships a read-only filesystem — only /tmp is
+// writable, and it isn't guaranteed to persist between invocations. Locally
+// (and on a normal long-running host like Render/Railway) we keep using the
+// real project-relative data/ folder so it persists properly on disk.
+const DATA_DIR = process.env.VERCEL
+  ? '/tmp/nestora-data'
+  : path.join(__dirname, '..', 'data');
 const DATA_FILE = path.join(DATA_DIR, 'db.json');
 
 function ensureDataFile() {

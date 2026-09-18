@@ -17,9 +17,15 @@ require('./src/seed');
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// Same read-only-filesystem constraint as db.js/upload.js: on Vercel only
+// /tmp is writable, so that's where uploaded photos actually land.
+const UPLOAD_DIR = process.env.VERCEL
+  ? '/tmp/nestora-uploads'
+  : path.join(__dirname, 'uploads');
+
 app.use(cors());
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(UPLOAD_DIR));
 app.use(attachUser); // populates req.user from a Bearer token, if present
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
@@ -46,6 +52,14 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: err.message || 'Something went wrong.' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Nestora Properties running at http://localhost:${PORT}`);
-});
+// On Vercel, this file is required by api/index.js and exported as a
+// serverless function handler — Vercel calls it per-request, so it must
+// NOT also open its own listening socket. Everywhere else (local dev,
+// Render, Railway, etc.) it runs as a normal always-on Node server.
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Nestora Properties running at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
